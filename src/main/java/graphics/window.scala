@@ -58,6 +58,7 @@ object window extends JFXApp{
         top_=(new Text {
           text = "Login"
           
+          //Padding is assigned from top, left, bottom, right
           padding = Insets(60, 60, 10, 60)
           style = "-fx-font-size: 26pt"
           alignmentInParent_=(scalafx.geometry.Pos.CenterRight)

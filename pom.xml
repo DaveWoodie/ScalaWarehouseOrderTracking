@@ -5,7 +5,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>Graphics Test Scalafx</name>
   
-  <dependencies>
+ <dependencies>
 	  <dependency>
 		<groupId>org.mongodb.scala</groupId>
 		<artifactId>mongo-scala-bson_2.11</artifactId>
@@ -15,9 +15,15 @@
 	<dependency>
 		<groupId>org.mongodb</groupId>
 		<artifactId>bson</artifactId>
-		<version>2.3</version>
+		<version>3.1.0</version>
 	</dependency>
-  
+	
+	<dependency>
+		<groupId>org.mongodb</groupId>
+		<artifactId>mongodb-driver</artifactId>
+		<version>3.1.0</version>
+	</dependency>	
+	
 	<dependency>
 		<groupId>org.mongodb</groupId>
 		<artifactId>mongodb-driver-core</artifactId>
@@ -27,7 +33,7 @@
 	<dependency>
 		<groupId>org.mongodb</groupId>
 		<artifactId>mongodb-driver-async</artifactId>
-		<version>3.0.0-beta1</version>
+		<version>3.1.0</version>
 	</dependency>
   
     <dependency>
@@ -50,5 +56,20 @@
 	
   </dependencies>
   
-  
+  <build>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.3</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+
+  </build>
+
 </project>
