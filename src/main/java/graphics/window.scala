@@ -3,7 +3,6 @@
  */
 package graphics
 
-import java.net.URL
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.geometry.Insets
@@ -35,51 +34,60 @@ object window extends JFXApp{
   lazy val log: loginLogic = new loginLogic
   
   /**
-   * Main method to build the panels for holding items.
+   * Main method to create the Login panel.
+   * Generates a small login panel with fields of username, and password.
+   * As well as a button to submit the login.
    */
   stage = new PrimaryStage {
+    //Title
     title = "Login"
+    
+    //Set dimensions and whether the window can be re-sized
     width = 360
     height = 280
-    
     resizable_=(false)
     
+    //Makes the new scene.
     scene = new Scene {
       fill = White
       
+      //Creates the pane for the objects to be put in.
       content = new BorderPane {
         
-        padding = Insets(10)
+        //Padding to put the pane in the right place.
+        //Padding is assigned from top, left, bottom, right
+        padding = Insets(50, 60, 10, 60)  
         
-//        padding = Insets(30)
-        //Something here is messing up moving the border pane to the center of the scene.
-      //  alignmentInParent_=(scalafx.geometry.Pos.CenterRight)
-        
-        top_=(new Text {
-          text = "Login"
-          
-          //Padding is assigned from top, left, bottom, right
-          padding = Insets(60, 60, 10, 60)
-          style = "-fx-font-size: 26pt"
-          alignmentInParent_=(scalafx.geometry.Pos.CenterRight)
-        })
-        
+        //Locations for the Two components of the display.
+        top_=(buildTitle())
         center_=(buildInputGrid)
       }
     }
     
-    //Add a css style sheet!
-    
+    //Add a css style sheet! Maybe one day!
     //Stylesheet.loadBinary("login.css")
-     
   }
   
+  /**
+   * Method to build the title of the page,
+   * sits in the top box of the border layout.
+   * Returns nothing but text, custom effects may be added later.
+   */
+  def buildTitle(): Text = {
+    new Text {
+      //Defines the text to be added
+      text = "Login"
+      style = "-fx-font-size: 26pt"
+      alignmentInParent_=(scalafx.geometry.Pos.CenterRight)
+    }
+  }
   
   /**
-   * Method to build the input login table for username and password.
+   * Method to build the input table for username and password.
    */
   def buildInputGrid():GridPane = {
    
+    //Makes the new grid pane to hold the components
     val g: GridPane = new GridPane {
       
       //In order to give the button access to the text in the fields you use these vals.
@@ -94,6 +102,9 @@ object window extends JFXApp{
       add(new  Button {
         text = "Login"
         //Here is where the action the button performs is assigned. 
+        //This will be changed to an instanciation of a class that takes in
+        // a Method and a Button and assigns the method to the button,
+        //Very functional!! 
         onAction = {ae: ActionEvent => {
           
             if (log.loginCheck(usr.text.value.toString(), pss.text.value.toString())) {
@@ -102,6 +113,8 @@ object window extends JFXApp{
             else {
               //LEARNING STUFF HERE NEED MORE THOUGH 
               println("Login Failed")
+              //I attempted to have the label change but have yet
+              //to get it working.
               lbl = new Label("Incorrect login details entered.")
               add(lbl, 2, 2)
             }
