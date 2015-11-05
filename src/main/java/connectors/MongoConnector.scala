@@ -1,29 +1,24 @@
 package connectors
 
-import org.mongodb.scala.MongoClient
-import org.mongodb.scala.MongoDatabase
-import org.mongodb.scala.MongoCollection
-import org.mongodb.scala.bson.collection.immutable.Document
+import com.mongodb.casbah.MongoCollection
+import com.mongodb.casbah.MongoConnection
+import com.mongodb.casbah.Imports._
 
 //.results() for no a-syncronous
 
-class MongoConnector {
+object MongoConnector {
     
-    val connection: String = "mongodb://localhost:27017"
-  
-    val mongoClient: MongoClient = MongoClient(connection)
-    val database: MongoDatabase = mongoClient.getDatabase("warehouseOSdb")
-    val collection: MongoCollection[Document] = database.getCollection("addresses")
-    
-    def print(): Unit = {
-      println(collection.find().first())
-  }
-}
-
-object MongoTest {
-  
   def main(args: Array[String]): Unit = {
-    val v: MongoConnector = new MongoConnector()
-    v.print()
+  
+    val mongoClient: MongoClient = MongoClient("localhost", 27017)
+   
+    val mongoColl = mongoClient("warehouseOSdb")("addresses")
+//    val user1 = MongoDBObject("House name/number" -> "5")
+  
+//    mongoColl += user1
+    val x = mongoColl.find()
+    
+    for { s <- x } println (s)
   }
+
 }

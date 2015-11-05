@@ -6,41 +6,79 @@
   <name>Graphics Test Scalafx</name>
   
  <dependencies>
-	  <dependency>
-		<groupId>org.mongodb.scala</groupId>
-		<artifactId>mongo-scala-bson_2.11</artifactId>
-		<version>1.0.0</version>
+
+	<dependency>
+		<groupId>org.mongodb</groupId>
+		<artifactId>casbah-core_2.11</artifactId>
+		<version>3.0.0</version>
 	</dependency>
+	
+	<dependency>
+		<groupId>org.mongodb</groupId>
+		<artifactId>casbah-commons_2.11</artifactId>
+		<version>3.0.0</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.mongodb</groupId>
+		<artifactId>casbah-query_2.11</artifactId>
+		<version>3.0.0</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.scala-lang</groupId>
+		<artifactId>scala-library</artifactId>
+		<version>2.11.7</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-api</artifactId>
+		<version>1.6.0</version>
+	</dependency>
+	
+<!-- 	<dependency> -->
+<!-- 		<groupId>org.specs2</groupId> -->
+<!-- 		<artifactId>specs2_2.11</artifactId> -->
+<!-- 		<version>1.7.1</version> -->
+<!-- 	</dependency> -->
+	
+
+<!-- 	  <dependency> -->
+<!-- 		<groupId>org.mongodb.scala</groupId> -->
+<!-- 		<artifactId>mongo-scala-bson_2.11</artifactId> -->
+<!-- 		<version>1.0.0</version> -->
+<!-- 	</dependency> -->
   
-	<dependency>
-		<groupId>org.mongodb</groupId>
-		<artifactId>bson</artifactId>
-		<version>3.1.0</version>
-	</dependency>
+<!-- 	<dependency> -->
+<!-- 		<groupId>org.mongodb</groupId> -->
+<!-- 		<artifactId>bson</artifactId> -->
+<!-- 		<version>3.1.0</version> -->
+<!-- 	</dependency> -->
 	
-	<dependency>
-		<groupId>org.mongodb</groupId>
-		<artifactId>mongodb-driver</artifactId>
-		<version>3.1.0</version>
-	</dependency>	
+<!-- 	<dependency> -->
+<!-- 		<groupId>org.mongodb</groupId> -->
+<!-- 		<artifactId>mongodb-driver</artifactId> -->
+<!-- 		<version>3.1.0</version> -->
+<!-- 	</dependency>	 -->
 	
-	<dependency>
-		<groupId>org.mongodb</groupId>
-		<artifactId>mongodb-driver-core</artifactId>
-		<version>3.1.0</version>
-	</dependency>
+<!-- 	<dependency> -->
+<!-- 		<groupId>org.mongodb</groupId> -->
+<!-- 		<artifactId>mongodb-driver-core</artifactId> -->
+<!-- 		<version>3.1.0</version> -->
+<!-- 	</dependency> -->
  
-	<dependency>
-		<groupId>org.mongodb</groupId>
-		<artifactId>mongodb-driver-async</artifactId>
-		<version>3.1.0</version>
-	</dependency>
+<!-- 	<dependency> -->
+<!-- 		<groupId>org.mongodb</groupId> -->
+<!-- 		<artifactId>mongodb-driver-async</artifactId> -->
+<!-- 		<version>3.1.0</version> -->
+<!-- 	</dependency> -->
   
-    <dependency>
-        <groupId>org.mongodb.scala</groupId>
-        <artifactId>mongo-scala-driver_2.11</artifactId>
-        <version>1.0.0</version>
-    </dependency>
+<!--     <dependency> -->
+<!--         <groupId>org.mongodb.scala</groupId> -->
+<!--         <artifactId>mongo-scala-driver_2.11</artifactId> -->
+<!--         <version>1.0.0</version> -->
+<!--     </dependency> -->
   
   	<dependency>
 		<groupId>org.scalafx</groupId>
