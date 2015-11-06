@@ -13,7 +13,9 @@ class SQLConnector {
  
     // there's probably a better way to do this
   var connection:Connection = null
-
+  //*********************************************************
+  //PASS IN THE ARRAY OF THE RIGHT LENGTH
+  //*********************************************************
   def doLoginQuery(s: String): Array[String] = {
  
     val results: Array[String] = new Array(2)

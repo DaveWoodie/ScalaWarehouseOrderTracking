@@ -3,35 +3,41 @@
  */
 package graphics
 
+//Main imports
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
+//Layout setup components
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
 import scalafx.scene.control.Label
 import scalafx.geometry.{Pos, VPos}
 import scalafx.scene.Scene
 import scalafx.scene.control.{Accordion, Label, ScrollPane, TitledPane}
+import scalafx.scene.layout.Pane
 import scalafx.scene.layout.HBox
 import scalafx.scene.layout.GridPane
 import scalafx.scene.control.TextField
 import scalafx.scene.control.PasswordField
 import scalafx.scene.control.Button
-import scalafx.geometry.Pos
+//Event handling for buttons
 import scalafx.event.ActionEvent
 import scalafx.event.EventHandler
-import scalafx.scene.paint.Color._
-import scalafx.scene.shape.Circle
-import scalafx.scene.text.{Font, Text}
 import scalafx.Includes._
+//Style parts of the import
+import scalafx.scene.paint.Color._
+import scalafx.scene.text.{Font, Text}
 import scalafx.scene.layout.BorderPane
 import javax.swing.text.Position
-import com.sun.javafx.css.Stylesheet
-import javax.swing.text.html.StyleSheet
+import scalafx.geometry.Pos
+//CSS for possible further use
+
+//Imports the logic classes, buttonLogic is currently unused.
 import logic.loginLogic
+import graphics.mainWindow
 
 object window extends JFXApp{
-  
-  lazy val log: loginLogic = new loginLogic
+
+//  lazy val bl: buttonLogic = new buttonLogic()
   
   /**
    * Main method to create the Login panel.
@@ -49,20 +55,24 @@ object window extends JFXApp{
     
     //Makes the new scene.
     scene = new Scene {
-      fill = White
+      
+      //STYLESHEET!!!
+      stylesheets = List(getClass.getResource("login.css").toExternalForm)
+//      fill = White
       
       //Creates the pane for the objects to be put in.
       content = new BorderPane {
-        
-        //Padding to put the pane in the right place.
-        //Padding is assigned from top, left, bottom, right
-        padding = Insets(50, 60, 10, 60)  
-        
-        //Locations for the Two components of the display.
-        top_=(buildTitle())
-        center_=(buildInputGrid)
+        id = "mainpane" 
+          //Padding to put the pane in the right place.
+          //Padding is assigned from top, left, bottom, right
+          padding = Insets(50, 50, 100, 90)  
+          
+          //Locations for the Two components of the display.
+          top_=(buildTitle)
+          center_=(buildInputGrid)
+        }
       }
-    }
+    
     
     //Add a css style sheet! Maybe one day!
     //Stylesheet.loadBinary("login.css")
@@ -99,31 +109,16 @@ object window extends JFXApp{
       add(usr, 1, 0)
       add(new Label ("Password:"), 0, 1)
       add(pss, 1, 1)
-      add(new  Button {
+      var b: Button = new Button{ 
         text = "Login"
-        //Here is where the action the button performs is assigned. 
-        //This will be changed to an instanciation of a class that takes in
-        // a Method and a Button and assigns the method to the button,
-        //Very functional!! 
-        onAction = {ae: ActionEvent => {
-          
-            if (log.loginCheck(usr.text.value.toString(), pss.text.value.toString())) {
-              println("Login Successful")
-            }
-            else {
-              //LEARNING STUFF HERE NEED MORE THOUGH 
-              println("Login Failed")
-              //I attempted to have the label change but have yet
-              //to get it working.
-              lbl = new Label("Incorrect login details entered.")
-              add(lbl, 2, 2)
-            }
-          }
-        
-        }
         alignmentInParent_=(scalafx.geometry.Pos.CenterRight)
-      }, 1, 2)
-//      add(lbl, 2, 2)
+        //Here is where the action the button performs is assigned. 
+        onAction = handle (loginButton(usr.text.value.toString(), pss.text.value.toString()))
+      }
+//      val q: buttonLogic = new buttonLogic(loginButton)
+//      q.assign(b)
+      
+      add(b, 1, 2)
       
       hgap_=(10)
       vgap_=(10)
@@ -133,4 +128,25 @@ object window extends JFXApp{
     return g
   }
   
+  def loginButton(usr: String, pss: String): Unit = {
+    
+    lazy val log: loginLogic = new loginLogic
+    
+    println(usr + " " + pss)
+    
+    if (log.loginCheck(usr, pss)) {
+      println("Login Successful")
+      
+      val m: mainWindow = new mainWindow()
+      
+      stage = m.buildMainStage()
+      
+    }
+    else {
+      //LEARNING STUFF HERE NEED MORE THOUGH 
+      println("Login Failed")
+      //I attempted to have the label change but have yet
+      //to get it working.
+    }
+  }
 }
