@@ -61,7 +61,7 @@ object window extends JFXApp{
 //      fill = White
       
       //Creates the pane for the objects to be put in.
-      content = new BorderPane {
+      root = new BorderPane {
         id = "mainpane" 
           //Padding to put the pane in the right place.
           //Padding is assigned from top, left, bottom, right

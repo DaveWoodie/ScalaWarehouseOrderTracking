@@ -11,7 +11,7 @@ import scalafx.scene.control.Label
 import scalafx.geometry.{Pos, VPos}
 import scalafx.scene.Scene
 import scalafx.scene.control.{Accordion, Label, ScrollPane, TitledPane}
-import scalafx.scene.layout.HBox
+import scalafx.scene.layout.{HBox, VBox}
 import scalafx.scene.layout.GridPane
 import scalafx.scene.control.{TabPane, Tab}
 import scalafx.scene.control.TextField
@@ -67,21 +67,53 @@ class mainWindow extends JFXApp{
       
       scene = new Scene {
 
-        content = new BorderPane {
+        root = new BorderPane {
           
-          padding = Insets(20, 10, 20, 20)
-          
-          var tabs: TabPane = new TabPane()
-          var table: TableView[Person] = buildTable()
-          
-          var f: Tab = new Tab("ONE")
-          
+          padding = Insets(20, 20, 20, 20)
+         
           center_=(
+              new VBox {
               
+            children = List(
+
+                new Text {
+                  text = "Heya"
+                  font = new Font("Verdana", 20)
+                },
+                
+                new TabPane {
+                  minWidth = 400
+                  tabs = Seq(
+                    new Tab {
+                      text = "Tab1 - NonClosable"
+                      closable = false
+                    },
+                    new Tab {
+                      text = "Tab2 - NonClosable"
+                      closable = false
+                    },
+                    new Tab {
+                      text = "Tab3 - Closable"
+                      closable = true
+                    }
+                  )
+                }
+                
+            )
+              }
               
-          
+//              new TabPane {
+//              List (
+//                new Tab {
+//                  id = ("ONE")
+//                    
+//                }
+//                )
+////                  closeable = false
+//                }
+//            )
+//                
           )
-          
           top_=(new Label {
             text = "Heyo"
             //padding = Insets(60, 100, 0, 40)
