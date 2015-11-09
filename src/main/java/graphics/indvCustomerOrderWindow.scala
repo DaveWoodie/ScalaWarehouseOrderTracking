@@ -1,0 +1,5 @@
+package graphics
+
+class indvCustomerOrderWindow {
+  
+}

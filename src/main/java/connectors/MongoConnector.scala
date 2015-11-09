@@ -1,7 +1,6 @@
 package connectors
 
 import com.mongodb.casbah.MongoCollection
-import com.mongodb.casbah.MongoConnection
 import com.mongodb.casbah.Imports._
 
 //.results() for no a-syncronous

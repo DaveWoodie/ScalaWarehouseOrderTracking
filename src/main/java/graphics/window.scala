@@ -65,7 +65,7 @@ object window extends JFXApp{
         id = "mainpane" 
           //Padding to put the pane in the right place.
           //Padding is assigned from top, left, bottom, right
-          padding = Insets(50, 50, 100, 90)  
+          padding = Insets(50, 50, 60, 80)  
           
           //Locations for the Two components of the display.
           top_=(buildTitle)
@@ -89,6 +89,7 @@ object window extends JFXApp{
       text = "Login"
       style = "-fx-font-size: 26pt"
       alignmentInParent_=(scalafx.geometry.Pos.CenterRight)
+//      padding = Insets(10)
     }
   }
   
