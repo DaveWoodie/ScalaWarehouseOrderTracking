@@ -61,7 +61,17 @@ class mainWindow extends JFXApp{
       scene = new Scene {
 
         root = new BorderPane {
-          
+          id = "MAINBORDERPANE"
+          //*******************************************************************************************
+          //NEED TO BUILD THE TABLE OUT HERE OR I CAN NEVER CHANGE IT TO FILTER
+          var custo: ObservableBuffer[Person] = ObservableBuffer[Person](
+            new Person("Peggy", "Sue", "555-6798", Color.Violet),
+            new Person("Rocky", "Raccoon", "555-6798", Color.GreenYellow),
+            new Person("Bungalow ", "Bill", "555-9275", Color.DarkSalmon)
+            )
+                  
+          var t: TableView[Person] = buildPOTable(custo)
+          //*******************************************************************************************
           padding = Insets(20, 20, 20, 20)
           top_=(new Label {
             text = " "
@@ -79,6 +89,9 @@ class mainWindow extends JFXApp{
                 },
                 
                 new TabPane {
+                  
+                  
+                  
                   minWidth = 400
                   tabs = Seq(
                     new Tab {
@@ -91,7 +104,10 @@ class mainWindow extends JFXApp{
                               minHeight = 500
                               maxHeight = 500
                               //Here is where the table is built
-                              content = buildPOTable()
+                              
+                              
+                              
+                              content = t
                             }
                           )
                       }
@@ -122,8 +138,11 @@ class mainWindow extends JFXApp{
           )
           
           bottom_=(new BorderPane {
+            id = "BOTTOMBORDERPANE"
             
             left_= (new GridPane { 
+              
+              id = "FILTERGRID"
               hgap_=(20)
               vgap_=(6)
               
@@ -132,21 +151,41 @@ class mainWindow extends JFXApp{
               add(new Text { text = "Filters"; font = new Font("Verdana", 15) }, 0, 0)
               
               add(new Label ("Status to filter by: "), 0, 1)
-              add(new Button { text = "Button 1" }, 1, 1)
+              add(new ComboBox[String] { 
+                //here are the options for the combo Box 
+                val testStrings = ObservableBuffer[String] ("Tec Op 1", "Tec Op 2", " Tec Op 3")
+                
+                //ID for the box so other parts can access it                
+                id = "STATUSBOX"
+                
+                promptText = "Choose one"
+                minWidth = 150
+                items = testStrings
+              }, 1, 1)
               add(new CheckBox { text = "Exclude Status?" }, 2, 1)
 
               add(new Label ("Filter by ID: "), 0, 2)
               
-
-              add(new ComboBox[String] { 
+              val idBox: ComboBox[String] = new ComboBox[String] { 
                 //here are the options for the combo Box 
-                val testStrings = ObservableBuffer[String] ("Option 1", "Option 2", "Option 3")
+                val testStrings = ObservableBuffer[String] ("", "Peggy", "Rocky", "Bungalow")
+                
+                //ID for the box so other parts can access it
+                id = "IDBOX"
+                
                 promptText = "Choose one"
-                minWidth = 100
+                minWidth = 150
                 items = testStrings
-              }, 1, 2)
+              }
 
-              add(new Button { text = "Search" }, 2, 3)
+              add(idBox, 1, 2)
+              add(new Button { 
+                
+                text = "Search"
+                minWidth = 110
+//HERE ***********************************************************************************
+                onAction = handle (custo.clear())
+                }, 2, 3)
             }
           )
           }
@@ -157,7 +196,23 @@ class mainWindow extends JFXApp{
     return stage
   }
   
-  def buildPOTable(): TableView[Person] = {
+  def buildPOList(): ObservableBuffer[Person] = { 
+    
+    //Changing the type here should change a lot about the program.
+    
+    println("HERE")
+    
+    //This method will be passed a String on the status, the ID and a boolean. 
+    //It will then go to the controller, 
+    //Assemble the correct SQL query (or maybe do it locally)
+    //And run another full pull of data with the new statement
+    val characters = ObservableBuffer[Person](
+      new Person("Peggy", "Sue", "555-6798", Color.Violet)
+   )
+    return characters
+  }
+  
+  def buildPOTable(charactersAlpha: ObservableBuffer[Person]): TableView[Person] = {
     
     //*************************************************************
     //Data here should be changed for the things from the database 
@@ -171,11 +226,14 @@ class mainWindow extends JFXApp{
     
     //*************************************************************
     
-    val characters = ObservableBuffer[Person](
-    new Person("Peggy", "Sue", "555-6798", Color.Violet),
-    new Person("Rocky", "Raccoon", "555-6798", Color.GreenYellow),
-    new Person("Bungalow ", "Bill", "555-9275", Color.DarkSalmon)
-    )
+    val characters = charactersAlpha 
+    
+    println(characters.indices)
+//    ObservableBuffer[Person](
+//    new Person("Peggy", "Sue", "555-6798", Color.Violet),
+//    new Person("Rocky", "Raccoon", "555-6798", Color.GreenYellow),
+//    new Person("Bungalow ", "Bill", "555-9275", Color.DarkSalmon)
+//    )
     
     new TableView[Person](characters) {
       minWidth = 752
@@ -227,6 +285,7 @@ class mainWindow extends JFXApp{
             prefWidth = 200
         }
       )
+      
     }
   }
   
