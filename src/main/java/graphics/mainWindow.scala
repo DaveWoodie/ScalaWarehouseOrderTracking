@@ -37,11 +37,13 @@ import scalafx.scene.control.{TableCell, TableColumn, TableView}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import scalafx.scene.control.Tab
-import Entities.purchaseOrder
 //java....
 import javafx.scene.input.MouseEvent
 import javafx.event.EventHandler
 import javafx.event.ActionEvent
+//Classes 
+import controllers.purchaseOrderController
+import Entities.purchaseOrder
 
 class mainWindow extends JFXApp{
   
@@ -53,7 +55,7 @@ class mainWindow extends JFXApp{
     stage = new PrimaryStage { 
       title = "Welcome to the Warehouse Order Tracking System"
       width = 800
-      height = 762
+      height = 782
       resizable_=(false)
       
       scene = new Scene {
@@ -62,13 +64,9 @@ class mainWindow extends JFXApp{
           id = "MAINBORDERPANE"
           //*******************************************************************************************
           //NEED TO BUILD THE TABLE OUT HERE OR I CAN NEVER CHANGE IT TO FILTER
-          var custo: ObservableBuffer[Person] = ObservableBuffer[Person](
-            new Person("Peggy", "Sue", "555-6798", Color.Violet),
-            new Person("Rocky", "Raccoon", "555-6798", Color.GreenYellow),
-            new Person("Bungalow ", "Bill", "555-9275", Color.DarkSalmon)
-            )
+          var custo: ObservableBuffer[purchaseOrder] = getPurchaseOrders(0, false)
                   
-          var t: TableView[Person] = buildPOTable(custo)
+          var t: TableView[purchaseOrder] = buildPOTable(custo)
           //*******************************************************************************************
           padding = Insets(20, 20, 20, 20)
           top_=(new Label {
@@ -99,6 +97,18 @@ class mainWindow extends JFXApp{
                               minHeight = 500
                               maxHeight = 500
                               content = t
+                              t.onMouseClicked = new EventHandler[MouseEvent] {
+                                override def handle(event: MouseEvent) {
+                                //println(t.selectionModel.value.getFocusedIndex.toString())
+
+                                  if(event.getClickCount == 2 && (t.selectionModel.value.getFocusedIndex + 1).toString() != "0") {
+                                    println("Double Clicked")
+                                    event.consume
+                                    println(t.getSelectionModel.selectedItemProperty.get.purchaseID.value)
+                                    indvPO(t.getSelectionModel.selectedItemProperty.get.purchaseID.value)
+                                  }
+                                }
+                              }
                             }
                           )
                       }
@@ -123,82 +133,151 @@ class mainWindow extends JFXApp{
                       closable = false
                     }
                   )
-                }
+                },
+                //***********
+                new BorderPane {
+                id = "BOTTOMBORDERPANE"
+                left_=(new GridPane {
+
+                  id = "FILTERGRID"
+                  hgap_=(20)
+                  vgap_=(6)
+
+                  alignmentInParent_=(scalafx.geometry.Pos.TopLeft)
+                  add(new Text { text = "Filters"; font = new Font("Verdana", 15) }, 0, 0)
+                  add(new Label("Status to filter by: "), 0, 1)
+
+                  val comboBox: ComboBox[String] = new ComboBox[String] {
+                    //here are the options for the combo Box 
+                    val testStrings = ObservableBuffer[String]("", "Status 1", "Status 2", "Status 3")
+
+                    //ID for the box so other parts can access it                
+                    id = "STATUSBOX"
+
+                    promptText = "Choose one"
+                    minWidth = 150
+                    items = testStrings
+                  }
+                  add(comboBox, 1, 1)
+
+                  val checkBox: CheckBox = new CheckBox { text = "Exclude Status?" }
+                  add(checkBox, 2, 1)
+
+                  add(new Label("Filter by ID: "), 0, 2)
+
+                  val idBox: TextField = new TextField {
+                    promptText = "Enter an ID"
+                    minWidth = 150
+                    editable = false
+                  }
+
+                  add(idBox, 1, 2)
+                  add(new Button {
+
+                    text = "Search"
+                    minWidth = 110
+
+                    println(checkBox.selected.value)
+
+                    onAction = handle(reSetCusto(custo, comboBoxInterpret(comboBox.value.value.toString()), checkBox.selected.value))
+                  }, 2, 3)
+                })
+              }
               )
             }
           )
           
-          bottom_=(new BorderPane {
-            id = "BOTTOMBORDERPANE"
-            
-            left_= (new GridPane { 
-              
-              id = "FILTERGRID"
-              hgap_=(20)
-              vgap_=(6)
-              
-              alignmentInParent_=(scalafx.geometry.Pos.TopLeft)
-              
-              add(new Text { text = "Filters"; font = new Font("Verdana", 15) }, 0, 0)
-              
-              add(new Label ("Status to filter by: "), 0, 1)
-              add(new ComboBox[String] { 
-                //here are the options for the combo Box 
-                val testStrings = ObservableBuffer[String] ("Tec Op 1", "Tec Op 2", "Tec Op 3")
-                
-                //ID for the box so other parts can access it                
-                id = "STATUSBOX"
-                
-                promptText = "Choose one"
-                minWidth = 150
-                items = testStrings
-              }, 1, 1)
-              add(new CheckBox { text = "Exclude Status?" }, 2, 1)
-
-              add(new Label ("Filter by ID: "), 0, 2)
-              
-              val idBox: TextField = new TextField { 
-                promptText = "Enter an ID"
-                minWidth = 150
-                editable = false
-              }
-              
-              add(idBox, 1, 2)
-              add(new Button { 
-                
-                text = "Search"
-                minWidth = 110
-//HERE ***********************************************************************************
-                onAction = handle (reSetCusto(custo))
-                }, 2, 3)
-            }
-          )
-          }
-          )
+//          bottom_=(new BorderPane {
+//            id = "BOTTOMBORDERPANE"
+//            left_= (new GridPane { 
+//              
+//              id = "FILTERGRID"
+//              hgap_=(20)
+//              vgap_=(6)
+//              
+//              alignmentInParent_=(scalafx.geometry.Pos.TopLeft)
+//              add(new Text { text = "Filters"; font = new Font("Verdana", 15) }, 0, 0)
+//              add(new Label ("Status to filter by: "), 0, 1)
+//              
+//              val comboBox: ComboBox[String] = new ComboBox[String] { 
+//                //here are the options for the combo Box 
+//                val testStrings = ObservableBuffer[String] ("","Status 1", "Status 2", "Status 3")
+//                
+//                //ID for the box so other parts can access it                
+//                id = "STATUSBOX"
+//                
+//                promptText = "Choose one"
+//                minWidth = 150
+//                items = testStrings
+//              }
+//              add(comboBox, 1, 1)
+//              
+//              val checkBox: CheckBox = new CheckBox { text = "Exclude Status?" } 
+//              add(checkBox, 2, 1)
+//
+//              add(new Label ("Filter by ID: "), 0, 2)
+//              
+//              val idBox: TextField = new TextField { 
+//                promptText = "Enter an ID"
+//                minWidth = 150
+//                editable = false
+//              }
+//              
+//              add(idBox, 1, 2)
+//              add(new Button { 
+//                
+//                text = "Search"
+//                minWidth = 110
+//                
+//                println(checkBox.selected.value)
+//                
+//                onAction = handle (reSetCusto(custo, comboBoxInterpret(comboBox.value.value.toString()), checkBox.selected.value))
+//                }, 2, 3)
+//            }
+//          )
+//          }
+         // )
         }
       }
     }
     return stage
   }
   
-//  def getPurchaseOrders(status : Int, filter : Boolean, poID: Int): ObservableBuffer[purchaseOrder] = {
-//  }
-
-  
-  def reSetCusto(c: ObservableBuffer[Person]): Unit = {
-    c.clear()
-    c.++=(buildPOList())
+  def comboBoxInterpret(s : String):Int = { 
+    var i: Int = 0;
+    if(s.equals("Status 1")) { 
+      i = 1
+    }
+    else if(s.equals("Status 2")) {
+      i = 2
+    }
+    else if(s.equals("Status 3")) {
+      i = 3
+    }
+    return i
   }
   
-  def getColour(i: Int): Color = {
+  def getPurchaseOrders(status : Int, filter : Boolean/*, poID: Int*/): ObservableBuffer[purchaseOrder] = {
+  
+    println("HERE")
+    val poc: purchaseOrderController = new purchaseOrderController()
+    return poc.getPurchaseOrders(status, filter)
+  }
+  
+  def reSetCusto(c: ObservableBuffer[purchaseOrder], status : Int, filter : Boolean): Unit = {
+    c.clear()
+    c.++=(getPurchaseOrders(status, filter))
+  }
+  
+  def getColour(i: String): Color = {
     var c: Color = Color.Black
-    if (i == 1) {
+    if (i.equals("1")) {
       c = Color.Coral
     }
-    else if (i == 2) {
+    else if (i.equals("2")) {
       c = Color.Blue
     }
-    else if (i == 3) {
+    else if (i.equals("3")) {
       c = Color.Green
     }
     return c
@@ -220,90 +299,71 @@ class mainWindow extends JFXApp{
     return characters
   }
   
-  def buildPOTable(charactersAlpha: ObservableBuffer[Person]): TableView[Person] = {
+  def buildPOTable(purchaseOrders: ObservableBuffer[purchaseOrder]): TableView[purchaseOrder] = {
     
-    //*************************************************************
-    //Data here should be changed for the things from the database 
-    //Entities are ready to store the data though so should be clean sailing
-    
-    val purchaseOrders = ObservableBuffer[purchaseOrder] (
-      
-        
-    
-    )
-    
-    //*************************************************************
-    
-    val characters = charactersAlpha 
-    
-    println(characters.indices)
-//    ObservableBuffer[Person](
-//    new Person("Peggy", "Sue", "555-6798", Color.Violet),
-//    new Person("Rocky", "Raccoon", "555-6798", Color.GreenYellow),
-//    new Person("Bungalow ", "Bill", "555-9275", Color.DarkSalmon)
-//    )
-    
-    new TableView[Person](characters) {
+    new TableView[purchaseOrder](purchaseOrders) {
       minWidth = 752
       minHeight = 496
-//      padding = Insets(10, 10, 10, 10)
       alignmentInParent_=(javafx.geometry.Pos.CENTER)
       
       //*****************************
       //On click actions!!
-      onMouseClicked = new EventHandler[MouseEvent] {
-        override def handle(event: MouseEvent) {
-
-          if(event.getClickCount == 2) {
-            println("Double Clicked")
-            event.consume
-            indvPO
-          }
-        }
-      }
+      
       //*****************************
       
       columns ++= List(
             
-        new TableColumn[Person, String] {
+        new TableColumn[purchaseOrder, String] {
           text = "Purchase Order ID"
-          cellValueFactory = {_.value.firstName }
-          prefWidth = 300
+          cellValueFactory = {_.value.purchaseID }
+          prefWidth = 110
         },
-        new TableColumn[Person, String]() {
-          text = "Last Name"
-          cellValueFactory = {_.value.lastName }
-          prefWidth = 100
+        new TableColumn[purchaseOrder, String] {
+          text = "Date Placed"
+          cellValueFactory = {_.value.datePlaced }
+          prefWidth = 110
         },
-        
-        new TableColumn[Person, Color] {
-            text = "Favorite Color"
-            cellValueFactory = { _.value.favoriteColor }
+        new TableColumn[purchaseOrder, String] {
+          text = "Date Recieved"
+          cellValueFactory = {_.value.dateRecieved }
+          prefWidth = 110
+        },
+
+        new TableColumn[purchaseOrder, String] {
+            text = "Status"
+            cellValueFactory = { _.value.statusID }
             // Render the property value when it changes, 
             // including initial assignment
-            cellFactory = { (col:TableColumn[Person, Color]) => 
-              new TableCell[Person, Color] {
+            cellFactory = { (col:TableColumn[purchaseOrder, String]) => 
+              new TableCell[purchaseOrder, String] {
                 item.onChange { (_, _, newColor) => 
-                  graphic = new Circle {fill = newColor; radius = 8; alignmentInParent_=(javafx.geometry.Pos.CENTER)}
+                  graphic = new Circle {fill = getColour(newColor); radius = 8}
                 }
                 alignmentInParent_=(scalafx.geometry.Pos.Center)
               }
             }
             prefWidth = 200
+        },
+        new TableColumn[purchaseOrder, String] {
+          text = "Employee ID"
+          cellValueFactory = {_.value.employeeID }
+          prefWidth = 110
+        },
+        new TableColumn[purchaseOrder, String] {
+          text = "Supplier ID"
+          cellValueFactory = {_.value.supplierID }
+          prefWidth = 110
         }
       )
-      
     }
   }
   
   
   
-  def indvPO() {
-    val m: indvPurchaseOrderWindow = new indvPurchaseOrderWindow(1)
+  def indvPO(i : String) {
+    val m: indvPurchaseOrderWindow = new indvPurchaseOrderWindow(i)
     stage = m.buildIndvPOStage()
   }
-  
-  
   
   def buildCOTable(): TableView[Person] = {
     

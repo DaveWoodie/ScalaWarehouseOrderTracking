@@ -9,6 +9,7 @@ class purchaseOrder(purchaseID_ : String, dateplaced_ : String, daterecieved_ : 
   val purchaseID = new StringProperty(this, "purchaseOrderID", purchaseID_)
   val datePlaced = new StringProperty(this, "datePlaced", dateplaced_)
   val dateRecieved = new StringProperty(this, "dateRecieved", daterecieved_)
+ // val statusID = new ObjectProperty(this, "statusID", statusID_)
   val statusID = new StringProperty(this, "statusID", statusID_)
   val employeeID = new StringProperty(this, "employeeID", employeeID_)  
   val supplierID = new StringProperty(this, "supplierID", supplierID_) 

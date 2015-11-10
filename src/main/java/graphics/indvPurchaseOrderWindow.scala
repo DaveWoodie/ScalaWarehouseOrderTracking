@@ -15,7 +15,7 @@ import scalafx.collections.ObservableBuffer
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 
-class indvPurchaseOrderWindow(purchaseOrderID_ : Integer) extends JFXApp {
+class indvPurchaseOrderWindow(purchaseOrderID_ : String) extends JFXApp {
   
   def buildIndvPOStage(): PrimaryStage = {
     
@@ -62,16 +62,12 @@ class indvPurchaseOrderWindow(purchaseOrderID_ : Integer) extends JFXApp {
     return stage
   }
   
-  def buildPurchaseOrderTable(purchaseOrderID : Integer): TableView[Person] = {
+  def buildPurchaseOrderTable(purchaseOrderID : String): TableView[Person] = {
     
     //Reason for taking in the purchase order ID here is so that when the method is called
     //The individual purchase order ID that is passed can be pulled from the database
    
-    val characters = ObservableBuffer[Person](
-      new Person("Phil", "Filler", "555-6798", Color.Beige),
-      new Person("Baloo", "The Bear", "555-6798", Color.Red),
-      new Person("Ben", "Gottcha-Back", "555-9275", Color.Yellow)
-    )
+    val characters: ObservableBuffer[purchaseOrderLine] = new ObservableBuffer[purchaseOrderLine]
     
     new TableView[Person](characters) {
       minWidth = 752
