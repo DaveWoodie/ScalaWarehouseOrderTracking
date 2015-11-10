@@ -49,9 +49,7 @@ class mainWindow extends JFXApp{
    * Main method to build the panels for holding items
    */
   def buildMainStage():PrimaryStage = {
-    
 
-  
     stage = new PrimaryStage { 
       title = "Welcome to the Warehouse Order Tracking System"
       width = 800
@@ -89,9 +87,6 @@ class mainWindow extends JFXApp{
                 },
                 
                 new TabPane {
-                  
-                  
-                  
                   minWidth = 400
                   tabs = Seq(
                     new Tab {
@@ -103,10 +98,6 @@ class mainWindow extends JFXApp{
                               minWidth = 400
                               minHeight = 500
                               maxHeight = 500
-                              //Here is where the table is built
-                              
-                              
-                              
                               content = t
                             }
                           )
@@ -153,7 +144,7 @@ class mainWindow extends JFXApp{
               add(new Label ("Status to filter by: "), 0, 1)
               add(new ComboBox[String] { 
                 //here are the options for the combo Box 
-                val testStrings = ObservableBuffer[String] ("Tec Op 1", "Tec Op 2", " Tec Op 3")
+                val testStrings = ObservableBuffer[String] ("Tec Op 1", "Tec Op 2", "Tec Op 3")
                 
                 //ID for the box so other parts can access it                
                 id = "STATUSBOX"
@@ -166,25 +157,19 @@ class mainWindow extends JFXApp{
 
               add(new Label ("Filter by ID: "), 0, 2)
               
-              val idBox: ComboBox[String] = new ComboBox[String] { 
-                //here are the options for the combo Box 
-                val testStrings = ObservableBuffer[String] ("", "Peggy", "Rocky", "Bungalow")
-                
-                //ID for the box so other parts can access it
-                id = "IDBOX"
-                
-                promptText = "Choose one"
+              val idBox: TextField = new TextField { 
+                promptText = "Enter an ID"
                 minWidth = 150
-                items = testStrings
+                editable = false
               }
-
+              
               add(idBox, 1, 2)
               add(new Button { 
                 
                 text = "Search"
                 minWidth = 110
 //HERE ***********************************************************************************
-                onAction = handle (custo.clear())
+                onAction = handle (reSetCusto(custo))
                 }, 2, 3)
             }
           )
@@ -194,6 +179,29 @@ class mainWindow extends JFXApp{
       }
     }
     return stage
+  }
+  
+//  def getPurchaseOrders(status : Int, filter : Boolean, poID: Int): ObservableBuffer[purchaseOrder] = {
+//  }
+
+  
+  def reSetCusto(c: ObservableBuffer[Person]): Unit = {
+    c.clear()
+    c.++=(buildPOList())
+  }
+  
+  def getColour(i: Int): Color = {
+    var c: Color = Color.Black
+    if (i == 1) {
+      c = Color.Coral
+    }
+    else if (i == 2) {
+      c = Color.Blue
+    }
+    else if (i == 3) {
+      c = Color.Green
+    }
+    return c
   }
   
   def buildPOList(): ObservableBuffer[Person] = { 
@@ -251,7 +259,6 @@ class mainWindow extends JFXApp{
             event.consume
             indvPO
           }
-
         }
       }
       //*****************************

@@ -35,7 +35,7 @@ import scalafx.geometry.Pos
 import logic.loginLogic
 import graphics.mainWindow
 
-object window extends JFXApp{
+object window extends JFXApp {
 
 //  lazy val bl: buttonLogic = new buttonLogic()
   
