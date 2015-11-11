@@ -105,7 +105,7 @@ class mainWindow extends JFXApp {
                               //println(t.selectionModel.value.getFocusedIndex.toString())
 
                               if (event.getClickCount == 2 && (t.selectionModel.value.getFocusedIndex + 1).toString() != "0") {
-//                                println("Double Clicked")
+                                //                                println("Double Clicked")
                                 event.consume
                                 println(t.getSelectionModel.selectedItemProperty.get.purchaseID.value)
                                 indvPO(t.getSelectionModel.selectedItemProperty.get.purchaseID.value, t.getSelectionModel.selectedItemProperty.get.statusID.value)
@@ -113,6 +113,59 @@ class mainWindow extends JFXApp {
                             }
                           }
                         })
+                      bottom_=(new BorderPane {
+                        id = "BOTTOMBORDERPANE"
+                        left_=(new GridPane {
+
+                          id = "FILTERGRID"
+                          hgap_=(20)
+                          vgap_=(6)
+
+                          alignmentInParent_=(scalafx.geometry.Pos.TopLeft)
+                          add(new Text { text = "Filters"; font = new Font("Verdana", 15) }, 0, 0)
+                          add(new Label("Status to filter by: "), 0, 1)
+
+                          val comboBox: ComboBox[String] = new ComboBox[String] {
+                            //here are the options for the combo Box 
+                            val testStrings = ObservableBuffer[String]("", "Status 1", "Status 2", "Status 3")
+
+                            //ID for the box so other parts can access it                
+                            id = "STATUSBOX"
+
+                            promptText = "Choose one"
+                            minWidth = 150
+                            items = testStrings
+                          }
+                          add(comboBox, 1, 1)
+
+                          val checkBox: CheckBox = new CheckBox { text = "Exclude Status?" }
+                          add(checkBox, 2, 1)
+
+                          add(new Label("Filter by ID: "), 0, 2)
+
+                          val idBox: TextField = new TextField {
+                            promptText = "Enter an ID"
+                            minWidth = 150
+                            editable = false
+                          }
+
+                          add(idBox, 1, 2)
+                          add(new Button {
+
+                            text = "Search"
+                            minWidth = 110
+
+                            //println(checkBox.selected.value)
+
+                            onAction = handle(reSetCusto(custo, comboBoxInterpret(comboBox.value.value.toString()), checkBox.selected.value))
+                          }, 2, 3)
+                          add(new Button {
+                            text = "Create PO"
+                            minWidth = 110
+                            onAction = handle(newPurchaseOrder())
+                          }, 2, 4)
+                        })
+                      })
                     }
                     closable = false
                   },
@@ -133,56 +186,8 @@ class mainWindow extends JFXApp {
 
                     closable = false
                   })
-              },
-              //***********
-              new BorderPane {
-                id = "BOTTOMBORDERPANE"
-                left_=(new GridPane {
-
-                  id = "FILTERGRID"
-                  hgap_=(20)
-                  vgap_=(6)
-
-                  alignmentInParent_=(scalafx.geometry.Pos.TopLeft)
-                  add(new Text { text = "Filters"; font = new Font("Verdana", 15) }, 0, 0)
-                  add(new Label("Status to filter by: "), 0, 1)
-
-                  val comboBox: ComboBox[String] = new ComboBox[String] {
-                    //here are the options for the combo Box 
-                    val testStrings = ObservableBuffer[String]("", "Status 1", "Status 2", "Status 3")
-
-                    //ID for the box so other parts can access it                
-                    id = "STATUSBOX"
-
-                    promptText = "Choose one"
-                    minWidth = 150
-                    items = testStrings
-                  }
-                  add(comboBox, 1, 1)
-
-                  val checkBox: CheckBox = new CheckBox { text = "Exclude Status?" }
-                  add(checkBox, 2, 1)
-
-                  add(new Label("Filter by ID: "), 0, 2)
-
-                  val idBox: TextField = new TextField {
-                    promptText = "Enter an ID"
-                    minWidth = 150
-                    editable = false
-                  }
-
-                  add(idBox, 1, 2)
-                  add(new Button {
-
-                    text = "Search"
-                    minWidth = 110
-
-                    //println(checkBox.selected.value)
-
-                    onAction = handle(reSetCusto(custo, comboBoxInterpret(comboBox.value.value.toString()), checkBox.selected.value))
-                  }, 2, 3)
-                })
-              })
+              } //***********
+              )
           })
 
           //       
@@ -190,6 +195,11 @@ class mainWindow extends JFXApp {
       }
     }
     return stage
+  }
+  
+  def newPurchaseOrder(): Unit = {
+    val npo: createPurchaseOrder = new createPurchaseOrder
+    stage = npo.buildCPOStage()
   }
 
   def comboBoxInterpret(s: String): Int = {
@@ -288,11 +298,11 @@ class mainWindow extends JFXApp {
           }
           prefWidth = 110
         },
-//        new TableColumn[purchaseOrder, String] {
-//          text = "Employee ID"
-//          cellValueFactory = { _.value.employeeID }
-//          prefWidth = 110
-//        },
+        //        new TableColumn[purchaseOrder, String] {
+        //          text = "Employee ID"
+        //          cellValueFactory = { _.value.employeeID }
+        //          prefWidth = 110
+        //        },
         new TableColumn[purchaseOrder, String] {
           text = "Supplier ID"
           cellValueFactory = { _.value.supplierID }
