@@ -115,4 +115,20 @@ class SQLConnector {
     connection.close()
     results
   }
+  
+  def doPurchaseOrderLineUpdate(s : String): Unit = {
+    println("Pushing changes to the database.")
+    try {
+
+      Class.forName(driver)
+      connection = DriverManager.getConnection(url, usname, passd)
+
+      val statement = connection.createStatement()
+      val resultSet = statement.executeUpdate(s)
+
+    } catch {
+      case e: Throwable => e.printStackTrace
+    }
+    connection.close()
+  }
 }

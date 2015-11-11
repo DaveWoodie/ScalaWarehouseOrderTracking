@@ -22,7 +22,7 @@ import javafx.event.EventHandler
 import javafx.event.ActionEvent
 import scalafx.scene.control.TextField
 
-class indvPurchaseOrderWindow(purchaseOrderID : String) extends JFXApp {
+class indvPurchaseOrderWindow(purchaseOrderID : String, statusOfPOID: String) extends JFXApp {
 
   def buildIndvPOStage(): PrimaryStage = {
 
@@ -32,6 +32,8 @@ class indvPurchaseOrderWindow(purchaseOrderID : String) extends JFXApp {
 
       val poc: purchaseOrderController = new purchaseOrderController()
       val po: ObservableBuffer[purchaseOrder] = poc.getSinglePO(purchaseOrderID)
+      val polength: Int = po.length
+      
       println("Purchase Order componenent: " + po(0).purchaseID.value)
 
       width = 800
@@ -67,20 +69,6 @@ class indvPurchaseOrderWindow(purchaseOrderID : String) extends JFXApp {
                   maxHeight = 500
                   //Here is where the table is built
                   content = t
-
-                  t.onMouseClicked = new EventHandler[MouseEvent] {
-                    override def handle(event: MouseEvent) {
-                      //println(t.selectionModel.value.getFocusedIndex.toString())
-
-                      if (event.getClickCount == 2 && (t.selectionModel.value.getFocusedIndex + 1).toString() != "0") {
-                        //                                println("Double Clicked")
-                        event.consume
-                        //                                println(t.getSelectionModel.selectedItemProperty.get.purchaseID.value)
-                        // t.getSelectionModel.selectedItemProperty.get.quantityDamg.value_=(popupInput())
-                      }
-                    }
-                  }
-
                 })
 
                 println("Line 66 poid: " + po(0).purchaseID.value)
@@ -110,7 +98,7 @@ class indvPurchaseOrderWindow(purchaseOrderID : String) extends JFXApp {
                           onAction = handle(backToMain)
                         },
 
-                        makeUpdateButton(po(0).statusID.value, po(0).purchaseID.value))
+                        makeUpdateButton(po(0).statusID.value, po(0).purchaseID.value/*, t, polength*/))
                     },
 
                     new HBox {
@@ -132,7 +120,7 @@ class indvPurchaseOrderWindow(purchaseOrderID : String) extends JFXApp {
                         new Button {
                           text = "Update"
                           minWidth = 150
-                          onAction = handle(t.getSelectionModel.selectedItemProperty.get.quantityDamg.value_=(damBox.text.value))
+                          onAction = handle(updateDamagedStock(t, damBox))
                         })
 
                     })
@@ -146,19 +134,27 @@ class indvPurchaseOrderWindow(purchaseOrderID : String) extends JFXApp {
     }
     return stage
   }
+  
+  def updateDamagedStock (t: TableView[purchaseOrderLine], damBox: TextField): Unit = {
+    
+    t.getSelectionModel.selectedItemProperty.get.quantityDamg.value_=(damBox.text.value)
+    val polc: purchaseOrderLineController = new purchaseOrderLineController
+    polc.updateDamagedStock(t.getSelectionModel.selectedItemProperty.get.purchaseOrderID.value, t.getSelectionModel.selectedItemProperty.get.itemID.value, t.getSelectionModel.selectedItemProperty.get.quantityDamg.value)
+    
+  }
 
   //  def popupDamageBox(): String = {
   //
   //  }
 
-  def makeUpdateButton(status: String, id: String): Button = {
+  def makeUpdateButton(status: String, id: String/*, t: TableView[purchaseOrderLine], length: Int*/): Button = {
     var b: Button = new Button()
 
     if (status.equals("1")) {
       println("Line 94 id: " + id)
       b = placedStatusButton(status, id)
     } else if (status.equals("2")) {
-      b = deliveredStatusButton(status, id)
+      b = deliveredStatusButton(status, id/*, t, length*/)
     } else if (status.equals("3")) {
       b = completeStatusButton
     }
@@ -189,14 +185,34 @@ class indvPurchaseOrderWindow(purchaseOrderID : String) extends JFXApp {
     poc.updatePOStatus(status, id)
   }
 
-  def deliveredStatusButton(status: String, id: String): Button = {
+  def deliveredStatusButton(status: String, ID: String/*, t: TableView[purchaseOrderLine], length: Int*/): Button = {
     new Button {
       println("Made Delivered Button")
       text = "Update Status"
       minWidth = 150
-      onAction = handle(println("TO DO delivered"))
+      //onAction = handle(printDamQuants(readDamagedQuantities(t, length)))
+      onAction = handle(updatePlacedStatus(status, ID))
     }
   }
+  
+//  def readDamagedQuantities(T: TableView[purchaseOrderLine], length: Int): ObservableBuffer[String] = {
+//    
+//    var results: ObservableBuffer[String] = new ObservableBuffer[String]
+//    println("Line 191 " + T.getSelectionModel.selectedItemProperty.get.quantityDamg.value)
+//    while(T.quantityDamg.value != null) {
+//      //println("Line 193")
+//      results.+=(T.getSelectionModel.selectedItemProperty.get.quantityDamg.value)
+//    }
+//    return results
+//  }
+//  
+//  def printDamQuants(ob: ObservableBuffer[String]): Unit = {
+//    var k: Int = 0
+//    println(ob(0))
+//    while (ob(k) != null) {
+//      println(ob(k))
+//    }
+//  }
 
   def completeStatusButton(): Button = {
     new Button {
@@ -222,7 +238,7 @@ class indvPurchaseOrderWindow(purchaseOrderID : String) extends JFXApp {
     val poc: purchaseOrderController = new purchaseOrderController
     val purchaseOrder: ObservableBuffer[purchaseOrder] = poc.getSinglePO(purchaseOrderID)
 
-    if (purchaseOrder(0).purchaseID.value.equals("1") || purchaseOrder(0).purchaseID.value.equals("3")) {
+    if (purchaseOrder(0).statusID.value.equals("1")/* || purchaseOrder(0).statusID.value.equals("3")*/) {
       new TableView[purchaseOrderLine](purchaseOrderLines) {
         minWidth = 752
         minHeight = 496

@@ -34,4 +34,20 @@ class purchaseOrderLineController {
     
   }
   
+  def updateDamagedStock(orderID: String, itemID : String, quantity : String): Unit = {
+    val con: SQLConnector = new SQLConnector
+
+    val s: String = "UPDATE mydb.purchaseorderline SET damagedquantity=" + quantity + " WHERE (iditem = " + itemID + " AND idpurchaseorder = " + orderID + ")"
+
+    try {
+      con.doPurchaseOrderLineUpdate(s)
+    }
+    catch {
+      case ex: SQLException => {
+        println("SQLException")
+        println(ex.getStackTrace)
+      } 
+    }
+  }
+  
 }

@@ -108,7 +108,7 @@ class mainWindow extends JFXApp {
 //                                println("Double Clicked")
                                 event.consume
                                 println(t.getSelectionModel.selectedItemProperty.get.purchaseID.value)
-                                indvPO(t.getSelectionModel.selectedItemProperty.get.statusID.value)
+                                indvPO(t.getSelectionModel.selectedItemProperty.get.purchaseID.value, t.getSelectionModel.selectedItemProperty.get.statusID.value)
                               }
                             }
                           }
@@ -265,12 +265,12 @@ class mainWindow extends JFXApp {
         new TableColumn[purchaseOrder, String] {
           text = "Date Placed"
           cellValueFactory = { _.value.datePlaced }
-          prefWidth = 110
+          prefWidth = 210
         },
         new TableColumn[purchaseOrder, String] {
           text = "Date Recieved"
           cellValueFactory = { _.value.dateRecieved }
-          prefWidth = 110
+          prefWidth = 210
         },
 
         new TableColumn[purchaseOrder, String] {
@@ -286,13 +286,13 @@ class mainWindow extends JFXApp {
               alignmentInParent_=(scalafx.geometry.Pos.Center)
             }
           }
-          prefWidth = 200
-        },
-        new TableColumn[purchaseOrder, String] {
-          text = "Employee ID"
-          cellValueFactory = { _.value.employeeID }
           prefWidth = 110
         },
+//        new TableColumn[purchaseOrder, String] {
+//          text = "Employee ID"
+//          cellValueFactory = { _.value.employeeID }
+//          prefWidth = 110
+//        },
         new TableColumn[purchaseOrder, String] {
           text = "Supplier ID"
           cellValueFactory = { _.value.supplierID }
@@ -301,8 +301,8 @@ class mainWindow extends JFXApp {
     }
   }
 
-  def indvPO(i: String) {
-    val m: indvPurchaseOrderWindow = new indvPurchaseOrderWindow(i)
+  def indvPO(orderID: String, statusID: String) {
+    val m: indvPurchaseOrderWindow = new indvPurchaseOrderWindow(orderID, statusID)
     println("HERE")
     stage = m.buildIndvPOStage()
   }
@@ -310,9 +310,9 @@ class mainWindow extends JFXApp {
   def buildCOTable(): TableView[Person] = {
 
     val characters = ObservableBuffer[Person](
-      new Person("Phil", "Filler", "555-6798", Color.Black),
-      new Person("Baloo", "The Bear", "555-6798", Color.GreenYellow),
-      new Person("Ben", "Gottcha-Back", "555-9275", Color.Aquamarine))
+      new Person("1", "Filler", "555-6798", Color.Black),
+      new Person("2", "The Bear", "555-6798", Color.GreenYellow),
+      new Person("3", "Gottcha-Back", "555-9275", Color.Aquamarine))
 
     new TableView[Person](characters) {
       minWidth = 752

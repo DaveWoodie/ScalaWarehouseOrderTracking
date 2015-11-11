@@ -19,8 +19,6 @@ class purchaseOrderController {
     
     val s: String = "UPDATE mydb.purchaseorder SET datedelivered='" + currentDate + "', idpurchaseorderstatus=" + statusToUpdateTo + " WHERE idpurchaseorder = " + poid + ""
 
-    var results: ObservableBuffer[purchaseOrder] = new ObservableBuffer[purchaseOrder]
-    
     try {
       con.doPurchaseOrderStatusUpdate(s)
     }
