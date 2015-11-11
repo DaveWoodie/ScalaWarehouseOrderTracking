@@ -107,8 +107,8 @@ class mainWindow extends JFXApp {
                               if (event.getClickCount == 2 && (t.selectionModel.value.getFocusedIndex + 1).toString() != "0") {
 //                                println("Double Clicked")
                                 event.consume
-//                                println(t.getSelectionModel.selectedItemProperty.get.purchaseID.value)
-                                indvPO(t.getSelectionModel.selectedItemProperty.get.purchaseID.value)
+                                println(t.getSelectionModel.selectedItemProperty.get.purchaseID.value)
+                                indvPO(t.getSelectionModel.selectedItemProperty.get.statusID.value)
                               }
                             }
                           }

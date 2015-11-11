@@ -40,6 +40,22 @@ class SQLConnector {
     connection.close()
     results
   }
+  
+  def doPurchaseOrderStatusUpdate(s : String): Unit = {
+    println("Pushing changes to the database.")
+    try {
+
+      Class.forName(driver)
+      connection = DriverManager.getConnection(url, usname, passd)
+
+      val statement = connection.createStatement()
+      val resultSet = statement.executeUpdate(s)
+
+    } catch {
+      case e: Throwable => e.printStackTrace
+    }
+    connection.close()
+  }
 
   def doPurchaseOrderQuery(s: String, fields: Array[String], results: ObservableBuffer[purchaseOrder]): ObservableBuffer[purchaseOrder] = {
 
@@ -89,6 +105,7 @@ class SQLConnector {
           k += 1
         }
         val po: purchaseOrderLine = new purchaseOrderLine(f(0), f(1), f(2))
+        po.quantityDamg.value_=(f(3))
         results.add(po)
       }
 

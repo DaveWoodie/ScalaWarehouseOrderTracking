@@ -4,8 +4,44 @@ import connectors.SQLConnector
 import java.sql.SQLException
 import scalafx.collections.ObservableBuffer
 import Entities.purchaseOrder
+import java.util.Calendar
+
 
 class purchaseOrderController {
+  
+  def updatePOStatus(currentStatus : String, poid : String): Unit = {
+    
+    val con: SQLConnector = new SQLConnector
+    val statusToUpdateTo: String = updatedStatus(currentStatus)
+    val currentDate: String = Calendar.getInstance().getTime().toString()
+    
+    println(currentDate)
+    
+    val s: String = "UPDATE mydb.purchaseorder SET datedelivered='" + currentDate + "', idpurchaseorderstatus=" + statusToUpdateTo + " WHERE idpurchaseorder = " + poid + ""
+
+    var results: ObservableBuffer[purchaseOrder] = new ObservableBuffer[purchaseOrder]
+    
+    try {
+      con.doPurchaseOrderStatusUpdate(s)
+    }
+    catch {
+      case ex: SQLException => {
+        println("SQLException")
+        println(ex.getStackTrace)
+      } 
+    }
+  }
+  
+  def updatedStatus(status : String): String = status match {
+    
+    case "1" => "2"
+    case "2" => "3"
+    case _ => {
+      println("Status: " + status)
+      println("Incorrect Input, not sure how you've managed it!")
+      "H"
+    }
+  }
   
   def getSinglePO(poid: String): ObservableBuffer[purchaseOrder] = {
     

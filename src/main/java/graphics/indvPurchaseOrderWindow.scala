@@ -14,22 +14,26 @@ import scalafx.collections.ObservableBuffer
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import controllers.purchaseOrderLineController
-import Entities.{purchaseOrderLine, purchaseOrder}
-import controllers.{purchaseOrderLineController, purchaseOrderController}
+import Entities.{ purchaseOrderLine, purchaseOrder }
+import controllers.{ purchaseOrderLineController, purchaseOrderController }
 import scalafx.scene.control.Button
+import javafx.scene.input.MouseEvent
+import javafx.event.EventHandler
+import javafx.event.ActionEvent
+import scalafx.scene.control.TextField
 
-class indvPurchaseOrderWindow(purchaseOrderID_ : String) extends JFXApp {
+class indvPurchaseOrderWindow(purchaseOrderID : String) extends JFXApp {
 
   def buildIndvPOStage(): PrimaryStage = {
 
     stage = new PrimaryStage {
 
-      title = "Purchase Order ID : " + purchaseOrderID_.toString()
-      
+      title = "Purchase Order ID : " + purchaseOrderID.toString()
+
       val poc: purchaseOrderController = new purchaseOrderController()
-      val po: ObservableBuffer[purchaseOrder] = poc.getSinglePO(purchaseOrderID_)
+      val po: ObservableBuffer[purchaseOrder] = poc.getSinglePO(purchaseOrderID)
       println("Purchase Order componenent: " + po(0).purchaseID.value)
-      
+
       width = 800
       height = 762
       resizable_=(false)
@@ -37,7 +41,16 @@ class indvPurchaseOrderWindow(purchaseOrderID_ : String) extends JFXApp {
       scene = new Scene {
 
         root = new BorderPane {
+
+          var t: TableView[purchaseOrderLine] = buildPurchaseOrderTable(purchaseOrderID)
+
           padding = Insets(20, 20, 20, 20)
+          //Nothing more than a bit of alignment magic to make the panel look a little nicer
+          top_=(new Label {
+            text = " "
+            //padding = Insets(60, 100, 0, 40)
+            alignmentInParent_=(scalafx.geometry.Pos.Center)
+          })
           center_=(new VBox {
 
             children = List(
@@ -53,22 +66,74 @@ class indvPurchaseOrderWindow(purchaseOrderID_ : String) extends JFXApp {
                   minHeight = 500
                   maxHeight = 500
                   //Here is where the table is built
-                  content = buildPurchaseOrderTable(purchaseOrderID_)
-                })
-                bottom_=(new HBox {
-                  alignmentInParent_=(javafx.geometry.Pos.CENTER)
-                  spacing = 20
-                  children = List(
-                    new Button {
-                      text = "Back to Purchase Orders"
-                      minWidth = 150
-                      onAction = handle(backToMain)
-                    },
-                    new Button {
-                      text = "Update Order Status"
-                      minWidth = 150
+                  content = t
 
-                      onAction = handle(println("TO DO"))
+                  t.onMouseClicked = new EventHandler[MouseEvent] {
+                    override def handle(event: MouseEvent) {
+                      //println(t.selectionModel.value.getFocusedIndex.toString())
+
+                      if (event.getClickCount == 2 && (t.selectionModel.value.getFocusedIndex + 1).toString() != "0") {
+                        //                                println("Double Clicked")
+                        event.consume
+                        //                                println(t.getSelectionModel.selectedItemProperty.get.purchaseID.value)
+                        // t.getSelectionModel.selectedItemProperty.get.quantityDamg.value_=(popupInput())
+                      }
+                    }
+                  }
+
+                })
+
+                println("Line 66 poid: " + po(0).purchaseID.value)
+
+                bottom_=(new VBox {
+
+                  var damBox: TextField = new TextField {
+                    promptText = "Number Damaged"
+                    minWidth = 150
+
+                    if (po(0).statusID.value.equals("1") || po(0).statusID.value.equals("3")) {
+                      disable = true
+                    }
+                  }
+
+                  padding = Insets(20)
+                  spacing = 20
+
+                  children = List(
+                    new HBox {
+                      alignmentInParent_=(javafx.geometry.Pos.CENTER)
+                      spacing = 20
+                      children = List(
+                        new Button {
+                          text = "Back to Purchase Orders"
+                          minWidth = 150
+                          onAction = handle(backToMain)
+                        },
+
+                        makeUpdateButton(po(0).statusID.value, po(0).purchaseID.value))
+                    },
+
+                    new HBox {
+                      spacing = 20
+                      children = List(
+                        new Label {
+                          text = "Quantity damaged Items: "
+                          minWidth = 150
+                        },
+                        damBox)
+                    },
+                    new HBox {
+                      spacing = 20
+                      children = List(
+                        new Label {
+                          text = "Update selected Row"
+                          minWidth = 150
+                        },
+                        new Button {
+                          text = "Update"
+                          minWidth = 150
+                          onAction = handle(t.getSelectionModel.selectedItemProperty.get.quantityDamg.value_=(damBox.text.value))
+                        })
 
                     })
                 })
@@ -80,6 +145,66 @@ class indvPurchaseOrderWindow(purchaseOrderID_ : String) extends JFXApp {
 
     }
     return stage
+  }
+
+  //  def popupDamageBox(): String = {
+  //
+  //  }
+
+  def makeUpdateButton(status: String, id: String): Button = {
+    var b: Button = new Button()
+
+    if (status.equals("1")) {
+      println("Line 94 id: " + id)
+      b = placedStatusButton(status, id)
+    } else if (status.equals("2")) {
+      b = deliveredStatusButton(status, id)
+    } else if (status.equals("3")) {
+      b = completeStatusButton
+    }
+    return b
+  }
+
+  def placedStatusButton(status: String, poid: String): Button = {
+    //println("Line 116 PLACED STATUS ID: " + poid)
+    new Button {
+      println("Made Placed Button")
+      text = "Update Status"
+      minWidth = 150
+      //onAction = handle(updatePlacedStatus(id.toString(), status))
+      onAction = {
+        handle(combinedAction(status, poid))
+        //handle (disable)
+      }
+    }
+  }
+
+  def combinedAction(status: String, id: String): Unit = {
+    //println("Status: " + status + " ID: " + id)
+    updatePlacedStatus(status, id)
+  }
+
+  def updatePlacedStatus(status: String, id: String): Unit = {
+    val poc: purchaseOrderController = new purchaseOrderController()
+    poc.updatePOStatus(status, id)
+  }
+
+  def deliveredStatusButton(status: String, id: String): Button = {
+    new Button {
+      println("Made Delivered Button")
+      text = "Update Status"
+      minWidth = 150
+      onAction = handle(println("TO DO delivered"))
+    }
+  }
+
+  def completeStatusButton(): Button = {
+    new Button {
+      println("Made Complete Button")
+      text = "Order Complete"
+      minWidth = 150
+      disable = true
+    }
   }
 
   def backToMain(): Unit = {
@@ -94,24 +219,54 @@ class indvPurchaseOrderWindow(purchaseOrderID_ : String) extends JFXApp {
     val p: purchaseOrderLineController = new purchaseOrderLineController()
     val purchaseOrderLines: ObservableBuffer[purchaseOrderLine] = p.getPurchaseOrderLines(purchaseOrderID)
 
-    new TableView[purchaseOrderLine](purchaseOrderLines) {
-      minWidth = 752
-      minHeight = 496
+    val poc: purchaseOrderController = new purchaseOrderController
+    val purchaseOrder: ObservableBuffer[purchaseOrder] = poc.getSinglePO(purchaseOrderID)
 
-      //      padding = Insets(10, 10, 10, 10)
-      alignmentInParent_=(javafx.geometry.Pos.CENTER)
-      columns ++= List(
+    if (purchaseOrder(0).purchaseID.value.equals("1") || purchaseOrder(0).purchaseID.value.equals("3")) {
+      new TableView[purchaseOrderLine](purchaseOrderLines) {
+        minWidth = 752
+        minHeight = 496
 
-        new TableColumn[purchaseOrderLine, String] {
-          text = "Item ID Number"
-          cellValueFactory = { _.value.itemID }
-          prefWidth = 200
-        },
-        new TableColumn[purchaseOrderLine, String] {
-          text = "Quantity of items"
-          cellValueFactory = { _.value.quantity }
-          prefWidth = 200
-        })
+        //      padding = Insets(10, 10, 10, 10)
+        alignmentInParent_=(javafx.geometry.Pos.CENTER)
+        columns ++= List(
+
+          new TableColumn[purchaseOrderLine, String] {
+            text = "Item ID Number"
+            cellValueFactory = { _.value.itemID }
+            prefWidth = 200
+          },
+          new TableColumn[purchaseOrderLine, String] {
+            text = "Quantity of items"
+            cellValueFactory = { _.value.quantity }
+            prefWidth = 200
+          })
+      }
+    } else {
+      new TableView[purchaseOrderLine](purchaseOrderLines) {
+        minWidth = 752
+        minHeight = 496
+
+        //      padding = Insets(10, 10, 10, 10)
+        alignmentInParent_=(javafx.geometry.Pos.CENTER)
+        columns ++= List(
+
+          new TableColumn[purchaseOrderLine, String] {
+            text = "Item ID Number"
+            cellValueFactory = { _.value.itemID }
+            prefWidth = 200
+          },
+          new TableColumn[purchaseOrderLine, String] {
+            text = "Quantity of items"
+            cellValueFactory = { _.value.quantity }
+            prefWidth = 200
+          },
+          new TableColumn[purchaseOrderLine, String] {
+            text = "Quantity of items damaged"
+            cellValueFactory = { _.value.quantityDamg }
+            prefWidth = 200
+          })
+      }
     }
   }
 

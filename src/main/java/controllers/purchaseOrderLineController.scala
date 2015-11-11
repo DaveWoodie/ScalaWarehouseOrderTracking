@@ -10,12 +10,13 @@ class purchaseOrderLineController {
   def getPurchaseOrderLines(ID : String): ObservableBuffer[purchaseOrderLine] = {
     
     val con: SQLConnector = new SQLConnector
-    var fields: Array[String] = new Array[String](3)
+    var fields: Array[String] = new Array[String](4)
     fields(0) = "iditem"
     fields(1) = "idpurchaseorder"
     fields(2) = "quantity"
+    fields(3) = "damagedquantity"
 
-    val s: String = "SELECT iditem, idpurchaseorder, quantity FROM mydb.purchaseorderline WHERE idpurchaseorder = " + ID + ""
+    val s: String = "SELECT iditem, idpurchaseorder, quantity, damagedquantity FROM mydb.purchaseorderline WHERE idpurchaseorder = " + ID + ""
 
     var results: ObservableBuffer[purchaseOrderLine] = new ObservableBuffer[purchaseOrderLine]
     
