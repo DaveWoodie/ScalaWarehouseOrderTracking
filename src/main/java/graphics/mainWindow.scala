@@ -61,11 +61,11 @@ class mainWindow extends JFXApp {
       scene = new Scene {
 
         root = new BorderPane {
-          id = "MAINBORDERPANE"
           //*******************************************************************************************
           //NEED TO BUILD THE TABLE OUT HERE OR I CAN NEVER CHANGE IT TO FILTER
+          //How this works is the filters are applied to the custo object, this is the 
+          //ObservableBuffer of purchaseOrders and the table relies on this
           var custo: ObservableBuffer[purchaseOrder] = getPurchaseOrders(0, false)
-
           var t: TableView[purchaseOrder] = buildPOTable(custo)
           //*******************************************************************************************
           padding = Insets(20, 20, 20, 20)
@@ -162,8 +162,8 @@ class mainWindow extends JFXApp {
                           add(new Button {
                             text = "Create PO"
                             minWidth = 110
-                            onAction = handle(newPurchaseOrder())
-                          }, 2, 4)
+                            onAction = handle(newPurchaseOrder(getNextPOID()))
+                          }, 5, 1)
                         })
                       })
                     }
@@ -197,9 +197,15 @@ class mainWindow extends JFXApp {
     return stage
   }
   
-  def newPurchaseOrder(): Unit = {
+  def newPurchaseOrder(poid: String): Unit = {
     val npo: createPurchaseOrder = new createPurchaseOrder
-    stage = npo.buildCPOStage()
+    stage = npo.buildCPOStage(poid)
+  }
+  
+  def getNextPOID(): String = {
+    val poc: purchaseOrderController = new purchaseOrderController()
+    val po: ObservableBuffer[purchaseOrder] = poc.getPurchaseOrders(0, false)
+    return (po.length + 1).toString()
   }
 
   def comboBoxInterpret(s: String): Int = {
@@ -227,7 +233,7 @@ class mainWindow extends JFXApp {
   }
 
   def getColour(i: String): Color = {
-    var c: Color = Color.Black
+    var c: Color = Color.White
     if (i.equals("1")) {
       c = Color.Red
     } else if (i.equals("2")) {
@@ -238,32 +244,12 @@ class mainWindow extends JFXApp {
     return c
   }
 
-  def buildPOList(): ObservableBuffer[Person] = {
-
-    //Changing the type here should change a lot about the program.
-
-    println("HERE")
-
-    //This method will be passed a String on the status, the ID and a boolean. 
-    //It will then go to the controller, 
-    //Assemble the correct SQL query (or maybe do it locally)
-    //And run another full pull of data with the new statement
-    val characters = ObservableBuffer[Person](
-      new Person("Peggy", "Sue", "555-6798", Color.Violet))
-    return characters
-  }
-
   def buildPOTable(purchaseOrders: ObservableBuffer[purchaseOrder]): TableView[purchaseOrder] = {
 
     new TableView[purchaseOrder](purchaseOrders) {
       minWidth = 752
       minHeight = 496
       alignmentInParent_=(javafx.geometry.Pos.CENTER)
-
-      //*****************************
-      //On click actions!!
-
-      //*****************************
 
       columns ++= List(
 
@@ -291,18 +277,18 @@ class mainWindow extends JFXApp {
           cellFactory = { (col: TableColumn[purchaseOrder, String]) =>
             new TableCell[purchaseOrder, String] {
               item.onChange { (_, _, newColor) =>
-                graphic = new Circle { fill = getColour(newColor); radius = 8 }
+                if (newColor != null) {
+                  graphic = new Circle { fill = getColour(newColor); radius = 8 }
+                }
+                else {
+                  graphic = new Circle { fill = Color.White; radius = 8 }
+                }
               }
               alignmentInParent_=(scalafx.geometry.Pos.Center)
             }
           }
           prefWidth = 110
         },
-        //        new TableColumn[purchaseOrder, String] {
-        //          text = "Employee ID"
-        //          cellValueFactory = { _.value.employeeID }
-        //          prefWidth = 110
-        //        },
         new TableColumn[purchaseOrder, String] {
           text = "Supplier ID"
           cellValueFactory = { _.value.supplierID }

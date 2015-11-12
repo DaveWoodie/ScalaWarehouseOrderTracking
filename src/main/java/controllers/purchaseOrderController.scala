@@ -9,6 +9,21 @@ import java.util.Calendar
 
 class purchaseOrderController {
   
+  def addPO(po: purchaseOrder): Unit = {
+    val con: SQLConnector = new SQLConnector
+    
+    val s: String = "INSERT INTO mydb.purchaseorder (idpurchaseorder, dateplaced, datedelivered, idpurchaseorderstatus, idEmployee, idSupplier) VALUES ('" + po.purchaseID.value.toString() + "', '" + po.datePlaced.value.toString() + "', '"+ po.dateRecieved.value.toString() + "', '"+ po.statusID.value.toString() + "', '"+ po.employeeID.value.toString() + "', '"+ po.supplierID.value.toString() + "')";
+    try {
+      con.doInsert(s)
+    }
+    catch {
+      case ex: SQLException => {
+        println("SQLException")
+        println(ex.getStackTrace)
+      } 
+    }
+  }
+  
   def updatePOStatus(currentStatus : String, poid : String): Unit = {
     
     val con: SQLConnector = new SQLConnector

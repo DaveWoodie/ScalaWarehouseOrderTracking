@@ -40,24 +40,37 @@ import javafx.event.EventHandler
 import javafx.event.ActionEvent
 //Classes 
 import controllers.purchaseOrderController
+import controllers.purchaseOrderLineController
 import Entities.purchaseOrder
+import Entities.purchaseOrderLine
+import java.util.Calendar
 
 class createPurchaseOrder extends JFXApp {
 
-  def buildCPOStage(): PrimaryStage = {
+  def buildCPOStage(poid: String): PrimaryStage = {
 
     stage = new PrimaryStage {
-      title = "Create a new Purchase Order"
+      title = "New Purchase Order " + poid
       width = 800
       height = 782
       resizable_=(false)
+
+      val m: mainWindow = new mainWindow()
 
       scene = new Scene {
 
         root = new BorderPane {
 
-          var custo: ObservableBuffer[purchaseOrder] = new ObservableBuffer[purchaseOrder]
-          var t: TableView[purchaseOrder] = new TableView[purchaseOrder]
+          val supplierComboBox = new ComboBox[String] {
+            //here are the options for the combo Box 
+            val testStrings = ObservableBuffer[String]("1", "2", "3", "4")
+
+            promptText = "Choose a supplier"
+            minWidth = 150
+            items = testStrings
+          }
+          var custo: ObservableBuffer[purchaseOrderLine] = new ObservableBuffer[purchaseOrderLine]
+          var t: TableView[purchaseOrderLine] = makeTableViewFromBuffer(t, custo)
 
           padding = Insets(20, 20, 20, 20)
           top_=(new Label {
@@ -79,19 +92,12 @@ class createPurchaseOrder extends JFXApp {
                     font = new Font("Verdana", 20)
                   },
 
-                  new ComboBox[String] {
-                    //here are the options for the combo Box 
-                    val testStrings = ObservableBuffer[String]("1", "2", "3", "4")
-
-                    promptText = "Choose a supplier"
-                    minWidth = 150
-                    items = testStrings
-                  },
+                  supplierComboBox,
 
                   new Button {
                     text = "Cancel"
                     minWidth = 150
-                    val m: mainWindow = new mainWindow()
+
                     onAction = handle(stage = m.buildMainStage())
                   })
               },
@@ -105,45 +111,122 @@ class createPurchaseOrder extends JFXApp {
               },
 
               new HBox {
-                
+
                 spacing = 10
-                
+
                 val quan: TextField = new TextField {
                   promptText = "Enter an Item Quantity"
                   minWidth = 150
                 }
-                
+
                 val ID: ComboBox[String] = new ComboBox[String] {
                   //here are the options for the combo Box 
-                  val testStrings = ObservableBuffer[String]("1", "2", "3", "4")
+                  val testStrings = ObservableBuffer[String]("1", "2", "3", "4", "5", "6", "7")
 
                   promptText = "Choose an Item ID"
                   minWidth = 150
                   items = testStrings
                 }
-                
+
                 children = List(
                   ID,
                   quan,
-                  
 
                   new Button {
                     text = "Add to Order"
                     minWidth = 150
-                    onAction = handle(println("TO DO STUBB"))
+                    onAction = handle({
+                      addLineToTable(custo, makePOLineFromInput(ID.value.value.toString(), poid, quan.text.value))
+                    })
                   })
               })
           })
 
-          bottom_=(
-            new Button {
-              text = "Add to Purchase Orders"
-              onAction = handle(println("Push to the database HERE"))
-            })
+          bottom_=(new VBox {
+
+            spacing = 20
+            children = List(
+
+              new Button {
+                text = "Remove Selected Row"
+                //println(poid)
+                minWidth = 150
+                onAction = handle({
+                  custo.remove(t.selectionModel.value.getFocusedIndex)
+                })
+              },
+
+              new Button {
+                text = "Add to Purchase Orders"
+                //println(poid)
+                minWidth = 150
+                onAction = handle({
+                  pushPOToDB(custo, poid.toString(), supplierComboBox.value.value.toString(), stage)
+                  stage = m.buildMainStage()
+                })
+              })
+
+          })
         }
       }
     }
     return stage
+  }
+
+  def pushPOToDB(data: ObservableBuffer[purchaseOrderLine], poid: String, supplierID: String, stage: PrimaryStage): Unit = {
+
+    pushPO(poid, supplierID)
+    pushPOLines(data, supplierID)
+  }
+  def pushPOLines(data: ObservableBuffer[purchaseOrderLine], supplierID: String): Unit = {
+    val polc: purchaseOrderLineController = new purchaseOrderLineController
+    var k: Int = 0
+    for (i <- data) {
+      polc.addNewLine(i, supplierID)
+    }
+  }
+
+  def pushPO(poid: String, supplierID: String): Unit = {
+    val poc: purchaseOrderController = new purchaseOrderController
+
+    //println("Line 172 POID: " + poid + " SUPPLIER ID: " + supplierID)
+
+    poc.addPO(makePO(poid.toString(), supplierID.toString()))
+  }
+
+  def makePO(poid: String, supplierID: String): purchaseOrder = {
+    val currentDate: String = Calendar.getInstance().getTime().toString()
+    new purchaseOrder(poid, currentDate, "TBC", "1", "1", supplierID)
+  }
+
+  def makePOLineFromInput(itemID: String, poid: String, quantity: String): purchaseOrderLine = {
+    new purchaseOrderLine(itemID, poid, quantity)
+  }
+
+  def addLineToTable(data: ObservableBuffer[purchaseOrderLine], pol: purchaseOrderLine): Unit = {
+    data.+=(pol)
+  }
+
+  def makeTableViewFromBuffer(t: TableView[purchaseOrderLine], data: ObservableBuffer[purchaseOrderLine]): TableView[purchaseOrderLine] = {
+    new TableView[purchaseOrderLine](data) {
+      minWidth = 752
+      minHeight = 496
+
+      //      padding = Insets(10, 10, 10, 10)
+      alignmentInParent_=(javafx.geometry.Pos.CENTER)
+      columns ++= List(
+
+        new TableColumn[purchaseOrderLine, String] {
+          text = "Item ID Number"
+          cellValueFactory = { _.value.itemID }
+          prefWidth = 200
+        },
+        new TableColumn[purchaseOrderLine, String] {
+          text = "Quantity of items"
+          cellValueFactory = { _.value.quantity }
+          prefWidth = 200
+        })
+    }
   }
 
 }

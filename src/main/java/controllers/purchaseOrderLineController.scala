@@ -7,6 +7,22 @@ import Entities.purchaseOrderLine
 
 class purchaseOrderLineController {
   
+  def addNewLine(data: purchaseOrderLine, supplierID: String): Unit = {
+    val con: SQLConnector = new SQLConnector
+
+    val s: String = "INSERT INTO mydb.purchaseorderline (idpurchaseorder, idsupplier, iditem, quantity, damagedquantity) VALUES ('" + data.purchaseOrderID.value.toString() + "', '"  + supplierID + "', '" + data.itemID.value.toString() +"', '" + data.quantity.value.toString() + "', 'unchecked')";
+
+    try {
+      con.doInsert(s)
+    }
+    catch {
+      case ex: SQLException => {
+        println("SQLException")
+        println(ex.getStackTrace)
+      } 
+    }
+  }
+  
   def getPurchaseOrderLines(ID : String): ObservableBuffer[purchaseOrderLine] = {
     
     val con: SQLConnector = new SQLConnector

@@ -41,6 +41,22 @@ class SQLConnector {
     results
   }
   
+  def doInsert(s: String): Unit = {
+    println("Pushing changes to the database.")
+    try {
+
+      Class.forName(driver)
+      connection = DriverManager.getConnection(url, usname, passd)
+
+      val statement = connection.createStatement()
+      val resultSet = statement.execute(s)
+
+    } catch {
+      case e: Throwable => e.printStackTrace
+    }
+    connection.close()
+  }
+  
   def doPurchaseOrderStatusUpdate(s : String): Unit = {
     println("Pushing changes to the database.")
     try {

@@ -34,6 +34,8 @@ class indvPurchaseOrderWindow(purchaseOrderID : String, statusOfPOID: String) ex
       val po: ObservableBuffer[purchaseOrder] = poc.getSinglePO(purchaseOrderID)
       val polength: Int = po.length
       
+      println("Length of the buffer is: " + polength)
+      
       println("Purchase Order componenent: " + po(0).purchaseID.value)
 
       width = 800
@@ -195,25 +197,6 @@ class indvPurchaseOrderWindow(purchaseOrderID : String, statusOfPOID: String) ex
     }
   }
   
-//  def readDamagedQuantities(T: TableView[purchaseOrderLine], length: Int): ObservableBuffer[String] = {
-//    
-//    var results: ObservableBuffer[String] = new ObservableBuffer[String]
-//    println("Line 191 " + T.getSelectionModel.selectedItemProperty.get.quantityDamg.value)
-//    while(T.quantityDamg.value != null) {
-//      //println("Line 193")
-//      results.+=(T.getSelectionModel.selectedItemProperty.get.quantityDamg.value)
-//    }
-//    return results
-//  }
-//  
-//  def printDamQuants(ob: ObservableBuffer[String]): Unit = {
-//    var k: Int = 0
-//    println(ob(0))
-//    while (ob(k) != null) {
-//      println(ob(k))
-//    }
-//  }
-
   def completeStatusButton(): Button = {
     new Button {
       println("Made Complete Button")
