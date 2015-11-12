@@ -60,6 +60,7 @@ class mainWindow extends JFXApp {
 
       scene = new Scene {
 
+        //Root of the scene
         root = new BorderPane {
           //*******************************************************************************************
           //NEED TO BUILD THE TABLE OUT HERE OR I CAN NEVER CHANGE IT TO FILTER
@@ -74,8 +75,10 @@ class mainWindow extends JFXApp {
             //padding = Insets(60, 100, 0, 40)
             alignmentInParent_=(scalafx.geometry.Pos.Center)
           })
+          //A lot of the V and HBoxes inside objects are just to make the layout look pretty. Not essential.
           center_=(new VBox {
 
+            //Children of the VBox
             children = List(
 
               new Text {
@@ -84,6 +87,7 @@ class mainWindow extends JFXApp {
                 font = new Font("Verdana", 20)
               },
 
+              //Here is the tabPane to contain both the purchase and customer orders.
               new TabPane {
                 minWidth = 400
                 tabs = Seq(
@@ -98,26 +102,29 @@ class mainWindow extends JFXApp {
                           maxHeight = 500
                           content = t
                           //*******************************************************************
-                          //Heres the double click functionalty
+                          //Heres the double click functionality
                           //*******************************************************************
                           t.onMouseClicked = new EventHandler[MouseEvent] {
                             override def handle(event: MouseEvent) {
                               //println(t.selectionModel.value.getFocusedIndex.toString())
-
+                              //the t.selectionModel condtion is no longer nessesary but was used for bug testing and will
+                              //be used again so it has been left in
                               if (event.getClickCount == 2 && (t.selectionModel.value.getFocusedIndex + 1).toString() != "0") {
                                 //                                println("Double Clicked")
+                                //I have yet to work out why event.consume is nessesary, but it is.
                                 event.consume
-                                println(t.getSelectionModel.selectedItemProperty.get.purchaseID.value)
+                                //println(t.getSelectionModel.selectedItemProperty.get.purchaseID.value)
+                                //Without the .value on the end this returns the identity of the selected items 'bean'
                                 indvPO(t.getSelectionModel.selectedItemProperty.get.purchaseID.value, t.getSelectionModel.selectedItemProperty.get.statusID.value)
                               }
                             }
                           }
                         })
+                        //Functional buttons for the bottom of the Purchase Order Tab
                       bottom_=(new BorderPane {
-                        id = "BOTTOMBORDERPANE"
+                        
                         left_=(new GridPane {
 
-                          id = "FILTERGRID"
                           hgap_=(20)
                           vgap_=(6)
 
@@ -129,15 +136,23 @@ class mainWindow extends JFXApp {
                             //here are the options for the combo Box 
                             val testStrings = ObservableBuffer[String]("", "Status 1", "Status 2", "Status 3")
 
-                            //ID for the box so other parts can access it                
+                            //ID for the box so other parts can access it  
+                            //I never managed to get this designation of ID to work. Maybe it can be used.
                             id = "STATUSBOX"
 
+                            //Possibly a silly prompt but never mind!
                             promptText = "Choose one"
                             minWidth = 150
+                            //Here is where the options for the comboBox are added to it
                             items = testStrings
                           }
+                          
+                          //Adds are how to add the components to the GridPane the numbers specify the column and then row
                           add(comboBox, 1, 1)
 
+                          //CheckBoxs and idBox have to be defined outside the add method in order
+                          //to be able to access their values in another Object or Function
+                          //(This is unless the id= thing can ever be made to work by me)
                           val checkBox: CheckBox = new CheckBox { text = "Exclude Status?" }
                           add(checkBox, 2, 1)
 
@@ -154,9 +169,8 @@ class mainWindow extends JFXApp {
 
                             text = "Search"
                             minWidth = 110
-
-                            //println(checkBox.selected.value)
-
+                            //Basic method to handle button clicks
+                            //ComboBox requires .value.value to get the value, the first value returns the ID of the bean of the comboBox
                             onAction = handle(reSetCusto(custo, comboBoxInterpret(comboBox.value.value.toString()), checkBox.selected.value))
                           }, 2, 3)
                           add(new Button {
@@ -169,6 +183,9 @@ class mainWindow extends JFXApp {
                     }
                     closable = false
                   },
+                  
+                  //Finally here is the other tab for the customer orders.
+                  //Currently there is no functionality tied to this
                   new Tab {
                     text = "Customer Orders"
 
@@ -197,17 +214,27 @@ class mainWindow extends JFXApp {
     return stage
   }
   
+  /**
+   * Method to open the pane to create a new Purchase Order
+   */
   def newPurchaseOrder(poid: String): Unit = {
     val npo: createPurchaseOrder = new createPurchaseOrder
+    //Overwrites the stage
     stage = npo.buildCPOStage(poid)
   }
   
+  /**
+   * Method to get the next Purchase Order ID Number to use
+   */
   def getNextPOID(): String = {
     val poc: purchaseOrderController = new purchaseOrderController()
     val po: ObservableBuffer[purchaseOrder] = poc.getPurchaseOrders(0, false)
     return (po.length + 1).toString()
   }
 
+  /**
+   * Method to interpret the status into a Colour for printing 
+   */
   def comboBoxInterpret(s: String): Int = {
     var i: Int = 0;
     if (s.equals("Status 1")) {
