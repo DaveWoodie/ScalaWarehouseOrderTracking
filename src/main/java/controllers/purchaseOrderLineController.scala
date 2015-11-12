@@ -1,3 +1,7 @@
+/**
+ * @author dwoodward
+ */
+
 package controllers
 
 import connectors.SQLConnector
@@ -7,6 +11,9 @@ import Entities.purchaseOrderLine
 
 class purchaseOrderLineController {
   
+  /**
+   * Method to add a new purchase order line.
+   */
   def addNewLine(data: purchaseOrderLine, supplierID: String): Unit = {
     val con: SQLConnector = new SQLConnector
 
@@ -23,6 +30,9 @@ class purchaseOrderLineController {
     }
   }
   
+  /**
+   * Method to get the pruchase order Lines of an order with product order ID, ID.
+   */
   def getPurchaseOrderLines(ID : String): ObservableBuffer[purchaseOrderLine] = {
     
     val con: SQLConnector = new SQLConnector
@@ -50,6 +60,9 @@ class purchaseOrderLineController {
     
   }
   
+  /**
+   * Method to update the levels of damaged stock in an order
+   */
   def updateDamagedStock(orderID: String, itemID : String, quantity : String): Unit = {
     val con: SQLConnector = new SQLConnector
 

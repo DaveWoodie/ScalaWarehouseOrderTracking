@@ -1,3 +1,7 @@
+/**
+ * @author dwoodward
+ */
+
 package graphics
 
 import scalafx.application.JFXApp

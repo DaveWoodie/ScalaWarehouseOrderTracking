@@ -7,6 +7,9 @@ import com.mongodb.casbah.Imports._
 
 object MongoConnector {
     
+  /**
+   * Method to access the mongo client, this is just a test method at the moment, but; providing the database is working does run well.
+   */
   def main(args: Array[String]): Unit = {
   
     val mongoClient: MongoClient = MongoClient("localhost", 27017)

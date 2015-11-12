@@ -48,7 +48,7 @@ import Entities.purchaseOrder
 class mainWindow extends JFXApp {
 
   /**
-   * Main method to build the panels for holding items
+   * Main method to build the panels for holding items.
    */
   def buildMainStage(): PrimaryStage = {
 
@@ -215,7 +215,7 @@ class mainWindow extends JFXApp {
   }
   
   /**
-   * Method to open the pane to create a new Purchase Order
+   * Method to open the pane to create a new Purchase Order.
    */
   def newPurchaseOrder(poid: String): Unit = {
     val npo: createPurchaseOrder = new createPurchaseOrder
@@ -224,7 +224,7 @@ class mainWindow extends JFXApp {
   }
   
   /**
-   * Method to get the next Purchase Order ID Number to use
+   * Method to get the next Purchase Order ID Number to use.
    */
   def getNextPOID(): String = {
     val poc: purchaseOrderController = new purchaseOrderController()
@@ -233,7 +233,7 @@ class mainWindow extends JFXApp {
   }
 
   /**
-   * Method to interpret the status into a Colour for printing 
+   * Method to interpret the status into a Colour for printing.
    */
   def comboBoxInterpret(s: String): Int = {
     var i: Int = 0;
@@ -247,18 +247,27 @@ class mainWindow extends JFXApp {
     return i
   }
 
+  /**
+   * Method to return the status of a customer order.
+   */
   def getPurchaseOrders(status: Int, filter: Boolean /*, poID: Int*/ ): ObservableBuffer[purchaseOrder] = {
 
-    println("HERE")
+    //println("HERE")
     val poc: purchaseOrderController = new purchaseOrderController()
     return poc.getPurchaseOrders(status, filter)
   }
 
+  /**
+   * Method to re-set the observable buffer of purchase orders when filtering occurs.
+   */
   def reSetCusto(c: ObservableBuffer[purchaseOrder], status: Int, filter: Boolean): Unit = {
     c.clear()
     c.++=(getPurchaseOrders(status, filter))
   }
 
+  /**
+   * Method to return a colour dependent on the status of the Purchase Order.
+   */
   def getColour(i: String): Color = {
     var c: Color = Color.White
     if (i.equals("1")) {
@@ -271,6 +280,9 @@ class mainWindow extends JFXApp {
     return c
   }
 
+  /**
+   * Method to build the Purchase Order Table right at the start.
+   */
   def buildPOTable(purchaseOrders: ObservableBuffer[purchaseOrder]): TableView[purchaseOrder] = {
 
     new TableView[purchaseOrder](purchaseOrders) {
@@ -324,12 +336,18 @@ class mainWindow extends JFXApp {
     }
   }
 
+  /**
+   * Method to build the individual Purchase Order Page.
+   */
   def indvPO(orderID: String, statusID: String) {
     val m: indvPurchaseOrderWindow = new indvPurchaseOrderWindow(orderID, statusID)
-    println("HERE")
+    //println("HERE")
     stage = m.buildIndvPOStage()
   }
 
+  /**
+   * Method to build the basic customer order table.
+   */
   def buildCOTable(): TableView[Person] = {
 
     val characters = ObservableBuffer[Person](

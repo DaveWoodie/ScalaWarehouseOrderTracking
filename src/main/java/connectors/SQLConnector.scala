@@ -8,6 +8,9 @@ import Entities.{purchaseOrder, purchaseOrderLine}
 
 class SQLConnector {
 
+  /**
+   * The only place in my code where there are class variables ;___;
+   */
   val driver = "com.mysql.jdbc.Driver"
   val url = "jdbc:mysql://localhost:3306"
   val usname = "root"
@@ -15,9 +18,9 @@ class SQLConnector {
 
   // there's probably a better way to do this
   var connection: Connection = null
-  //*********************************************************
-  //PASS IN THE ARRAY OF THE RIGHT LENGTH
-  //*********************************************************
+  /**
+   * Method to do the Login Query
+   */
   def doLoginQuery(s: String): Array[String] = {
 
     val results: Array[String] = new Array(2)
@@ -41,6 +44,9 @@ class SQLConnector {
     results
   }
   
+  /**
+   * Method to insert anything into any table 
+   */
   def doInsert(s: String): Unit = {
     println("Pushing changes to the database.")
     try {
@@ -57,6 +63,9 @@ class SQLConnector {
     connection.close()
   }
   
+  /**
+   * Method to update the status of a purchase order
+   */
   def doPurchaseOrderStatusUpdate(s : String): Unit = {
     println("Pushing changes to the database.")
     try {
@@ -73,6 +82,9 @@ class SQLConnector {
     connection.close()
   }
 
+  /**
+   * Method to get a purchase Order
+   */
   def doPurchaseOrderQuery(s: String, fields: Array[String], results: ObservableBuffer[purchaseOrder]): ObservableBuffer[purchaseOrder] = {
 
     try {
@@ -102,6 +114,9 @@ class SQLConnector {
     results
   }
   
+  /**
+   * Method to return the pruchase order lines
+   */
   def doPurchaseOrderLineQuery(s: String, fields: Array[String], results: ObservableBuffer[purchaseOrderLine]): ObservableBuffer[purchaseOrderLine] = {
 
     try {
@@ -132,6 +147,9 @@ class SQLConnector {
     results
   }
   
+  /**
+   * Method to update the purchase order lines
+   */
   def doPurchaseOrderLineUpdate(s : String): Unit = {
     println("Pushing changes to the database.")
     try {

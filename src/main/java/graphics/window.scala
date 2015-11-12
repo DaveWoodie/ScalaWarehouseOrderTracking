@@ -129,11 +129,14 @@ object window extends JFXApp {
     return g
   }
   
+  /**
+   * Applies the logic of the login button
+   */
   def loginButton(usr: String, pss: String): Unit = {
     
     lazy val log: loginLogic = new loginLogic
     
-    println(usr + " " + pss)
+    //println(usr + " " + pss)
     
     if (log.loginCheck(usr, pss)) {
       println("Login Successful")
