@@ -18,7 +18,15 @@
 		<artifactId>casbah-commons_2.11</artifactId>
 		<version>3.0.0</version>
 	</dependency>
-
+	
+<!-- Scala Test Dependancy -->
+	<dependency>
+		<groupId>org.scalatest</groupId>
+		<artifactId>scalatest_2.11</artifactId>
+		<version>2.2.5</version>
+	</dependency>
+	
+<!-- Mongo DB Dependancy  -->
 	<dependency>
 		<groupId>org.mongodb</groupId>
 		<artifactId>casbah-query_2.11</artifactId>
