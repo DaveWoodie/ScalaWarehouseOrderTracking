@@ -10,7 +10,7 @@ class customerOrder (idCustomerOrder_ : String, datePlaced_ : String) {
   val isPaid = new IntegerProperty(this, "isPaid", 0)
   val idAddress = new StringProperty(this, "idAddress", "1") 
   val idCustomerOrderStatus = new StringProperty(this, "idCustomerOrderStatus", "1") 
-  val idEmployee = new StringProperty(this, "idEmployee", "None") 
+  val idEmployee = new StringProperty(this, "idEmployee", null) 
   val idCustomer = new StringProperty(this, "idCustomer", "2") 
     
 }

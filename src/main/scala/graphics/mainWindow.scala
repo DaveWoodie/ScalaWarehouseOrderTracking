@@ -25,9 +25,12 @@ import javafx.event.EventHandler
 import controllers.{ purchaseOrderController, purchaseOrderLineController }
 import entities.{ purchaseOrder, purchaseOrderLine }
 import java.util.Calendar
-import graphics.components.{CustomerOrderTab, spacingLabel, TitleText, tableScrollPane, StatusComboBox, IDTextField, PurchaseOrderTable, CustomerOrderTable}
+import graphics.components.{ spacingLabel, TitleText, tableScrollPane, StatusComboBox, IDTextField, PurchaseOrderTable }
 import logic.CaseSorter
-
+import graphics.components.CustomerStatusComboBox
+import entities.customerOrder
+import controllers.CustomerOrderController
+import graphics.components.AllCustomerOrderTable
 
 class mainWindow extends JFXApp {
 
@@ -48,12 +51,14 @@ class mainWindow extends JFXApp {
         root = new BorderPane {
           //*******************************************************************************************
           //NEED TO BUILD THE TABLE OUT HERE OR I CAN NEVER CHANGE IT TO FILTER
-          val custo: ObservableBuffer[purchaseOrder] = getPurchaseOrders(0, false)
+          val purchase: ObservableBuffer[purchaseOrder] = getPurchaseOrders(0, false)
           val temp: PurchaseOrderTable = new PurchaseOrderTable
-          val t: TableView[purchaseOrder] = temp.makePO(custo)
+          val t: TableView[purchaseOrder] = temp.makePO(purchase)
 
-          val custtemp: CustomerOrderTable = new CustomerOrderTable
-          val c: TableView[Person] = custtemp.buildCOTable()
+          val custo: ObservableBuffer[customerOrder] = getAllCustomerOrders(0, false)
+          val custtemp: AllCustomerOrderTable = new AllCustomerOrderTable
+          val c: TableView[customerOrder] = custtemp.buildCOTable(custo)
+
           //Would like to make this more modular but not managed to find a way to pass in,
           //the method and tie it to the mouse highlight.
           t.onMouseClicked = new EventHandler[MouseEvent] {
@@ -61,6 +66,15 @@ class mainWindow extends JFXApp {
               if (event.getClickCount == 2 && (t.selectionModel.value.getFocusedIndex + 1).toString() != "0") {
                 event.consume
                 indvPO(t.getSelectionModel.selectedItemProperty.get.purchaseID.value, t.getSelectionModel.selectedItemProperty.get.statusID.value)
+              }
+            }
+          }
+          
+          c.onMouseClicked = new EventHandler[MouseEvent] {
+            override def handle(event: MouseEvent) {
+              if (event.getClickCount == 2 && (c.selectionModel.value.getFocusedIndex + 1).toString() != "0") {
+                event.consume
+                indvPO(c.getSelectionModel.selectedItemProperty.get.customerID.value, c.getSelectionModel.selectedItemProperty.get.idCustomerOrderStatus.value)
               }
             }
           }
@@ -105,7 +119,7 @@ class mainWindow extends JFXApp {
                             text = "Search"
                             minWidth = 110
                             val sorter: CaseSorter = new CaseSorter
-                            onAction = handle(reSetCusto(custo, sorter.comboBoxInterpretFilterStatus, comboBox.value.value.toString(), checkBox.selected.value))
+                            onAction = handle(reSetPurcho(purchase, sorter.comboBoxInterpretFilterStatus, comboBox.value.value.toString(), checkBox.selected.value))
                           }, 2, 3)
                           add(new Button {
                             text = "Create PO"
@@ -117,7 +131,46 @@ class mainWindow extends JFXApp {
                     }
                     closable = false
                   },
-                  new CustomerOrderTab(c))
+
+                  new Tab {
+                    text = "Customer Orders"
+                    content = new BorderPane {
+                      center_=(
+                        new BorderPane {
+                          center_=(new tableScrollPane(c))
+
+                          //Functional buttons for the bottom of the Purchase Order Tab
+                          bottom_=(new BorderPane {
+
+                            left_=(new GridPane {
+
+                              hgap_=(20)
+                              vgap_=(6)
+
+                              alignmentInParent_=(scalafx.geometry.Pos.TopLeft)
+                              add(new Text { text = "Filters"; font = new Font("Verdana", 15) }, 0, 0)
+                              add(new Label("Status to filter by: "), 0, 1)
+
+                              val comboBox: CustomerStatusComboBox = new CustomerStatusComboBox
+                              val checkBox: CheckBox = new CheckBox { text = "Exclude Status?" }
+                              val idBox: IDTextField = new IDTextField
+
+                              add(comboBox, 1, 1)
+                              add(checkBox, 2, 1)
+                              add(new Label("Filter by ID: "), 0, 2)
+                              add(idBox, 1, 2)
+                              add(new Button {
+                                text = "Search"
+                                minWidth = 110
+                                val sorter: CaseSorter = new CaseSorter
+                                onAction = handle(reSetCusto(custo, sorter.CustomerComboBoxInterpretFilterStatus, comboBox.value.value.toString(), checkBox.selected.value))
+                              }, 2, 3)
+                            })
+                          })
+                        })
+                    }
+                    closable = false
+                  })
               })
           })
         }
@@ -125,7 +178,12 @@ class mainWindow extends JFXApp {
     }
     return stage
   }
-
+  //For these functions I really struggled to put them in separate classes or functions like good scala should have been written.
+  //The first problem was the stage overwriting, as stages passed into other methods were vals and therefore couldn't be re-assigned.
+  //
+  //The second not nessesarilly problem but more design choice was getting things like the next purchase order ID number.
+  //I feel it's something I will hopefully improve on in the future!
+  //
   /**
    * Method to open the pane to create a new Purchase Order.
    */
@@ -150,14 +208,25 @@ class mainWindow extends JFXApp {
     val poc: purchaseOrderController = new purchaseOrderController()
     return poc.getPurchaseOrders(status, filter)
   }
-
+  
   /**
    * Method to re-set the observable buffer of purchase orders when filtering occurs.
    */
-  def reSetCusto(c: ObservableBuffer[purchaseOrder], f: String => Int, statusFilter: String, filter: Boolean): Unit = {
+  def reSetPurcho(c: ObservableBuffer[purchaseOrder], f: String => Int, statusFilter: String, filter: Boolean): Unit = {
     val status = f(statusFilter)
     c.clear()
     c.++=(getPurchaseOrders(status, filter))
+  }
+
+  def reSetCusto(c: ObservableBuffer[customerOrder], f: String => Int, statusFilter: String, filter: Boolean): Unit = {
+    val status = f(statusFilter)
+    c.clear()
+    c.++=(getAllCustomerOrders(status, filter))
+  }
+
+  def getAllCustomerOrders(status: Int, filter: Boolean): ObservableBuffer[customerOrder] = {
+    val poc: CustomerOrderController = new CustomerOrderController()
+    return poc.getCustomerOrders(status, filter)
   }
 
   /**
@@ -167,7 +236,11 @@ class mainWindow extends JFXApp {
    */
   def indvPO(orderID: String, statusID: String) {
     val m: indvPurchaseOrderWindow = new indvPurchaseOrderWindow(orderID, statusID)
-    //println("HERE")
     stage = m.buildIndvPOStage()
+  }
+  
+  def indvCO(orderID: String, statusID: String) {
+    val m: indvCustomerOrderWindow = new indvCustomerOrderWindow(orderID, statusID)
+    stage = m.buildIndvCOStage()
   }
 }

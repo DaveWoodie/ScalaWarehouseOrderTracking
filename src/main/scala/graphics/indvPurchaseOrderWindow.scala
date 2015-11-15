@@ -28,6 +28,7 @@ import scalafx.scene.control.TextField
 import graphics.components.PurchaseOrderLineTable
 import logic.CaseSorter
 import controllers.DamagedStockController
+import graphics.components.tableScrollPane
 
 class indvPurchaseOrderWindow(purchaseOrderID: String, statusOfPOID: String) extends JFXApp {
 
@@ -75,14 +76,7 @@ class indvPurchaseOrderWindow(purchaseOrderID: String, statusOfPOID: String) ext
                 font = new Font("Verdana", 20)
               },
               new BorderPane {
-                center_=(new ScrollPane {
-                  alignmentInParent_=(javafx.geometry.Pos.CENTER)
-                  minWidth = 400
-                  minHeight = 500
-                  maxHeight = 500
-                  //Here is where the table is built
-                  content = t
-                })
+                center_=(new tableScrollPane(t)) 
                 bottom_=(new VBox {
                   
                   val damBox: TextField = new TextField {

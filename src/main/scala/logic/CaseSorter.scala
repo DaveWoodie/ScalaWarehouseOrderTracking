@@ -39,4 +39,23 @@ class CaseSorter {
     case "3" => {val v = new SinglePurchaseOrderUpdateStatusButton; v.completeStatusButton}
   }
   
+  /**
+   * Method to interpret the status chosen in the customer Order Filter.
+   */
+  def CustomerComboBoxInterpretFilterStatus(s: String): Int = s match {
+    case "Placed" => 1
+    case "Claimed" => 2
+    case "Picked" => 3
+    case "Packed" => 4
+    case "Out for Delivery" => 5
+    case _ => 0
+  }
+  
+  def getCustomerColour(s: String): Color = s match {
+    case "1" => Color.Red
+    case "4" => Color.Orange
+    case "5" => Color.LimeGreen
+    case _ => Color.Black
+  }
+  
 }
