@@ -47,7 +47,7 @@ class CustomerOrderController {
     }
   }
   
-  def getSinglePO(coid: String): ObservableBuffer[customerOrder] = {
+  def getSingleCO(coid: String): ObservableBuffer[customerOrder] = {
     
     val con: SQLConnector = new SQLConnector
     var fields: Array[String] = new Array[String](6)

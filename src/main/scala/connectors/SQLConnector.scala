@@ -10,6 +10,7 @@ import java.sql.ResultSet
 import scalafx.collections.ObservableBuffer
 import entities.{purchaseOrder, purchaseOrderLine}
 import entities.customerOrder
+import entities.customerOrderLine
 
 /**
  * This class could be written much better to have just and UPDATE and a SELECT method and return based on one or the other.
@@ -196,6 +197,44 @@ class SQLConnector {
         val po: purchaseOrderLine = new purchaseOrderLine(f(0), f(1), f(2))
         po.quantityDamg.value_=(f(3))
         results.add(po)
+      }
+
+    } catch {
+      case e: Throwable => e.printStackTrace
+    }
+    connection.close()
+    results
+  }
+  
+  def doCustomerOrderLineQuery(s: String, fields: Array[String], results: ObservableBuffer[customerOrderLine]): ObservableBuffer[customerOrderLine] = {
+
+    try {
+
+      Class.forName(driver)
+      connection = DriverManager.getConnection(url, usname, passd)
+
+      val statement = connection.createStatement()
+      val resultSet = statement.executeQuery(s)
+
+      //Same as the other while loop.
+      while (resultSet.next()) {
+
+        var f: Array[String] = new Array[String](fields.length)
+        val i: Int = 0
+        
+        def loop(a: Array[String], in: Int): Unit = {
+          if(in == fields.length) {
+          }
+          else {
+            a(in) = resultSet.getString(fields(in))
+            loop(a, in.+(1))
+          }
+        }
+        
+        loop(f, i)
+        
+        val co: customerOrderLine = new customerOrderLine(f(0), f(1))
+        results.add(co)
       }
 
     } catch {
