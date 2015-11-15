@@ -74,7 +74,7 @@ class mainWindow extends JFXApp {
             override def handle(event: MouseEvent) {
               if (event.getClickCount == 2 && (c.selectionModel.value.getFocusedIndex + 1).toString() != "0") {
                 event.consume
-                indvPO(c.getSelectionModel.selectedItemProperty.get.customerID.value, c.getSelectionModel.selectedItemProperty.get.idCustomerOrderStatus.value)
+                indvCO(c.getSelectionModel.selectedItemProperty.get.customerID.value, c.getSelectionModel.selectedItemProperty.get.idCustomerOrderStatus.value)
               }
             }
           }

@@ -24,8 +24,9 @@ import logic.CaseSorter
 import controllers.CustomerOrderController
 import entities.customerOrder
 import graphics.components.CustomerOrderLineTable
+import entities.customerOrderLine
 
-class indvCustomerOrderWindow (customerOrderID: String, statusOfCO: String) extends JFXApp {
+class indvCustomerOrderWindow(customerOrderID: String, statusOfCO: String) extends JFXApp {
   def buildIndvCOStage(): PrimaryStage = {
 
     stage = new PrimaryStage {
@@ -34,7 +35,7 @@ class indvCustomerOrderWindow (customerOrderID: String, statusOfCO: String) exte
       title = "Customer Order ID : " + customerOrderID.toString()
 
       //This is the logic for pulling a single purchase order.
-      
+
       val coc: CustomerOrderController = new CustomerOrderController
       val co: ObservableBuffer[customerOrder] = coc.getSingleCO(customerOrderID)
       val colength: Int = co.length
@@ -49,7 +50,7 @@ class indvCustomerOrderWindow (customerOrderID: String, statusOfCO: String) exte
           val c: CaseSorter = new CaseSorter
           //Table view defined outside so I can change the ObservableBuffer that is used to populate it. Vars.... Eugh
           val colt: CustomerOrderLineTable = new CustomerOrderLineTable
-          val t: TableView[purchaseOrderLine] = colt.makeCOLT(po(0).purchaseID.value)
+          val t: TableView[customerOrderLine] = colt.makeCOLT(co(0).customerID.value)
 
           padding = Insets(20, 20, 20, 20)
           //Nothing more than a bit of alignment magic to make the panel look a little nicer
@@ -62,7 +63,7 @@ class indvCustomerOrderWindow (customerOrderID: String, statusOfCO: String) exte
 
             children = List(
               new Text {
-                text = "Purchase Order Contents"
+                text = "Customer Order Contents"
                 //                  padding = Insets(0, 10, 10, 10)
                 font = new Font("Verdana", 20)
               },
@@ -85,15 +86,14 @@ class indvCustomerOrderWindow (customerOrderID: String, statusOfCO: String) exte
                       spacing = 20
                       children = List(
                         new Button {
-                          text = "Back to Purchase Orders"
+                          text = "Back to Main Screen Orders"
                           minWidth = 150
-                          
+
                           if (co(0).idCustomerOrderStatus.value.equals("2") || co(0).idCustomerOrderStatus.value.equals("3")) {
                             disable = true
                           }
                           onAction = handle(backToMain)
-                        }
-                        )
+                        })
                     },
 
                     new HBox {
@@ -102,9 +102,7 @@ class indvCustomerOrderWindow (customerOrderID: String, statusOfCO: String) exte
                         new Label {
                           text = "Quantity damaged Items: "
                           minWidth = 150
-                        }
-                        
-                        )
+                        })
                     },
                     new HBox {
                       spacing = 20
@@ -116,9 +114,9 @@ class indvCustomerOrderWindow (customerOrderID: String, statusOfCO: String) exte
                         new Button {
                           text = "Update"
                           minWidth = 150
-                          
-                            disable = true
-                                             })
+
+                          disable = true
+                        })
 
                     })
                 })

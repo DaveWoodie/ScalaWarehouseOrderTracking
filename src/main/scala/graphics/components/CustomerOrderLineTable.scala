@@ -12,13 +12,13 @@ import entities.customerOrderLine
 import entities.customerOrder
 
 class CustomerOrderLineTable extends TableView[customerOrderLine] {
-  
+
   def makeCOLT(CustomerOrderID: String): TableView[customerOrderLine] = {
-    val t: TableView[customerOrderLine] = buildCOLTable(CustomerOrderID)
+    val t: TableView[customerOrderLine] = buildCOLT(CustomerOrderID)
     return t
   }
-  
-   def buildCOLTable(CustomerOrderID: String): TableView[customerOrderLine] = {
+
+  def buildCOLT(CustomerOrderID: String): TableView[customerOrderLine] = {
 
     //Reason for taking in the purchase order ID here is so that when the method is called
     //The individual purchase order ID that is passed can be pulled from the database
@@ -27,8 +27,8 @@ class CustomerOrderLineTable extends TableView[customerOrderLine] {
 
     val coc: CustomerOrderController = new CustomerOrderController
     val customerOrder: ObservableBuffer[customerOrder] = coc.getSingleCO(CustomerOrderID)
-   
-   new TableView[customerOrderLine](customerOrderLines) {
+
+    new TableView[customerOrderLine](customerOrderLines) {
       minWidth = 752
       minHeight = 496
 
@@ -52,8 +52,5 @@ class CustomerOrderLineTable extends TableView[customerOrderLine] {
           prefWidth = 200
         })
     }
-   
-     
-   }
-  
+  }
 }
