@@ -5,7 +5,15 @@ import com.qa.entities.{purchaseOrderLine, purchaseOrder}
 import scalafx.application.JFXApp.PrimaryStage
 import java.util.Calendar
 
+/**
+ * Class for dealing with the creation and pushes of new purchase orders to the database.
+ */
+
 class NewPurchaseOrderController {
+  
+  /**
+   * Method to push the purchase order line data to the database
+   */
   def pushPOToDB(data: ObservableBuffer[purchaseOrderLine], poid: String, supplierID: String): Unit = {
     pushPO(poid, supplierID)
     pushPOLines(data, supplierID)

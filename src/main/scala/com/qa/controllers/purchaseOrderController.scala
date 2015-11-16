@@ -59,7 +59,10 @@ class purchaseOrderController {
     }
   }
   
-  
+  /**
+   * Case Switch statement to update the status from one to the next.
+   * Restricts the assignment of statuses to a one-way path through them.
+   */
   def updatedStatus(status : String): String = status match {
     
     case "1" => "2"
@@ -71,6 +74,9 @@ class purchaseOrderController {
     }
   }
   
+  /**
+   * Gets a single purchase order from the database.s
+   */
   def getSinglePO(poid: String): ObservableBuffer[purchaseOrder] = {
     
     val con: SQLConnector = new SQLConnector
@@ -99,6 +105,9 @@ class purchaseOrderController {
     return results
   }
   
+  /**
+   * Gets all purchase orders from the database based on the filters in the purchase order.
+   */
   def getPurchaseOrders(status: Int, filter: Boolean): ObservableBuffer[purchaseOrder] = {
     
     val con: SQLConnector = new SQLConnector
@@ -127,6 +136,9 @@ class purchaseOrderController {
     
   }
   
+  /**
+   * Get the purchase order SQL statement based on the status and the filter.
+   */
   def thePurchaseOrderGateway(status: Int, filter: Boolean): String = {
     
     if (status != 0) {

@@ -5,8 +5,14 @@ import java.sql.SQLException
 import scalafx.collections.ObservableBuffer
 import com.qa.entities.customerOrderLine
 
+/**
+ * Class for loading the customer order lines. 
+ */
 class CustomerOrderLineController {
   
+  /**
+   * Gets the customer order lines from the database.
+   */
   def getCustomerOrderLines(ID : String): ObservableBuffer[customerOrderLine] = {
     
     val con: SQLConnector = new SQLConnector

@@ -10,6 +10,9 @@ import scalafx.collections.ObservableBuffer
 
 object POControllerTest {
   
+  /**
+   * Method to test if scala could pull something from the purchase orders
+   */
   def main(args: Array[String]): Unit = {
     
     val p: purchaseOrderController = new purchaseOrderController()

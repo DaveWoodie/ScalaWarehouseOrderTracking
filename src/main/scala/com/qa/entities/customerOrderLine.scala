@@ -2,6 +2,9 @@ package com.qa.entities
 
 import scalafx.beans.property.{ObjectProperty, StringProperty, IntegerProperty}
 
+/**
+ * Entity class for the customer order lines.
+ */
 class customerOrderLine (itemID_ : String, quantity_ : String){
   
   val itemID = new StringProperty(this, "itemID", itemID_)

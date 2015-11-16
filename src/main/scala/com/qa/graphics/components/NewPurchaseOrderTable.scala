@@ -6,8 +6,14 @@ import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.TableColumn
 import scalafx.scene.control.TableColumn._
 
+/**
+ * Class to instanciate a new table to fill with new item lines for the creation of a new purchase order.
+ */
 class NewPurchaseOrderTable {
   
+  /**
+   * Makes a table to populate with a new purchase order.
+   */
   def makeNPOLT(t: TableView[purchaseOrderLine], data: ObservableBuffer[purchaseOrderLine]): TableView[purchaseOrderLine] = {
     new TableView[purchaseOrderLine](data) {
       minWidth = 752

@@ -30,6 +30,10 @@ import com.qa.logic.CaseSorter
 import com.qa.entities.customerOrder
 import com.qa.controllers.CustomerOrderController
 
+/**
+ * Class to make the main window. Will display all the information from purchase and customer orders.
+ */
+
 class mainWindow extends JFXApp {
 
   /**
@@ -216,12 +220,18 @@ class mainWindow extends JFXApp {
     c.++=(getPurchaseOrders(status, filter))
   }
 
+  /**
+   * Re-sets the customer order Observable Buffer and re-populates it using the filters.
+   */
   def reSetCusto(c: ObservableBuffer[customerOrder], f: String => Int, statusFilter: String, filter: Boolean): Unit = {
     val status = f(statusFilter)
     c.clear()
     c.++=(getAllCustomerOrders(status, filter))
   }
 
+  /**
+   * Method to get all the customer orders.
+   */
   def getAllCustomerOrders(status: Int, filter: Boolean): ObservableBuffer[customerOrder] = {
     val poc: CustomerOrderController = new CustomerOrderController()
     return poc.getCustomerOrders(status, filter)
@@ -237,6 +247,9 @@ class mainWindow extends JFXApp {
     stage = m.buildIndvPOStage()
   }
   
+  /**
+   * Method to overwrite the current stage with the stage for a single customer order.
+   */
   def indvCO(orderID: String, statusID: String) {
     val m: indvCustomerOrderWindow = new indvCustomerOrderWindow(orderID, statusID)
     stage = m.buildIndvCOStage()

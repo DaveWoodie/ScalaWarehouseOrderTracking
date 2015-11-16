@@ -7,8 +7,14 @@ package com.qa.logic
 import com.qa.connectors.SQLConnector
 import java.sql.SQLException
 
+/**
+ * Class to apply the logic of the login to the SQL
+ */
 class loginLogic {
   
+  /**
+   * Main logic method to check
+   */
   def loginCheck(usr: String, pwd: String): Boolean = {
     
     val connection: SQLConnector = new SQLConnector

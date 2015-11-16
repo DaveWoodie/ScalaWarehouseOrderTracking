@@ -4,6 +4,10 @@ import scalafx.scene.control.Button
 import com.qa.controllers.purchaseOrderController
 import scalafx.Includes._
 
+/**
+ * Class to make the correct update purchase order button for each individual view
+ * Done as each button needed slightly different functions.
+ */
 class SinglePurchaseOrderUpdateStatusButton extends Button {
   /**
    * Method to update the Placed Status of an order

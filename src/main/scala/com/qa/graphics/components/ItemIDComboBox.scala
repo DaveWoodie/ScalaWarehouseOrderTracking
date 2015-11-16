@@ -4,6 +4,7 @@ import scalafx.scene.control.ComboBox
 import scalafx.collections.ObservableBuffer
 
 /**
+ * Class to make the Id Item box object.
  * Currently this only includes a hard coded values of the item IDs,
  * In future this data will be pulled from the database.
  */

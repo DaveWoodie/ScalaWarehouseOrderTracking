@@ -9,13 +9,22 @@ import scalafx.scene.control.TableColumn
 import scalafx.scene.control.TableColumn._
 import com.qa.entities.{customerOrderLine, customerOrder}
 
+/**
+ * Class to make a table of customer order lines when a single customer order line is highlighted.
+ */
 class CustomerOrderLineTable extends TableView[customerOrderLine] {
 
+  /**
+   * Method to make the customer order line table.
+   */
   def makeCOLT(CustomerOrderID: String): TableView[customerOrderLine] = {
     val t: TableView[customerOrderLine] = buildCOLT(CustomerOrderID)
     return t
   }
 
+  /**
+   * Main method to build and populate the table of the customer order lines.
+   */
   def buildCOLT(CustomerOrderID: String): TableView[customerOrderLine] = {
 
     //Reason for taking in the purchase order ID here is so that when the method is called

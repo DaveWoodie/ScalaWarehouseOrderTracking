@@ -11,6 +11,9 @@ import com.qa.controllers.purchaseOrderController
 import javafx.event.EventHandler
 import scalafx.scene.input.MouseEvent
 
+/**
+ * Class to instanciate the purchase order table and populate it given the ObsevableBuffer of purchase orders.
+ */
 class PurchaseOrderTable() extends TableView[purchaseOrder] {
 
   /**

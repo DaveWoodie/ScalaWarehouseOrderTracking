@@ -8,8 +8,14 @@ import com.qa.controllers.purchaseOrderLineController
 import scalafx.scene.control.TableColumn
 import scalafx.scene.control.TableColumn._
 
+/**
+ * Class for making the purchase order line table.
+ */
 class PurchaseOrderLineTable extends TableView[purchaseOrderLine] {
 
+  /**
+   * Main method to call in the individual window view to make the table
+   */
   def makePOLT(purchaseOrderID: String): TableView[purchaseOrderLine] = {
     val t: TableView[purchaseOrderLine] = buildPOLTable(purchaseOrderID)
     return t
@@ -31,6 +37,9 @@ class PurchaseOrderLineTable extends TableView[purchaseOrderLine] {
       damTable(purchaseOrderLines)
     }
   }
+  /**
+   * Method to build the table with no coloumn for damaaged items.
+   */
   def unDamTable(purchaseOrderLines: ObservableBuffer[purchaseOrderLine]): TableView[purchaseOrderLine] = {
     new TableView[purchaseOrderLine](purchaseOrderLines) {
       minWidth = 752
@@ -53,6 +62,9 @@ class PurchaseOrderLineTable extends TableView[purchaseOrderLine] {
     }
   }
 
+  /**
+   * Method to build the table with an editable column for damaged item stock level checks.
+   */
   def damTable(purchaseOrderLines: ObservableBuffer[purchaseOrderLine]): TableView[purchaseOrderLine] = {
     new TableView[purchaseOrderLine](purchaseOrderLines) {
       minWidth = 752

@@ -6,6 +6,9 @@ import scalafx.collections.ObservableBuffer
 import com.qa.entities.customerOrder
 import com.qa.connectors.SQLConnector
 
+/**
+ * Class for loading and dealing with the customer orders and the database.
+ */
 class CustomerOrderController {
 
   
@@ -33,7 +36,10 @@ class CustomerOrderController {
     }
   }
   
-  
+  /**
+   * Little case statement for the progression of the status' of the customer orders.
+   * NOT IMPLEMENTED YET, it would also exist within the CaseSorter class.
+   */
   def updatedStatus(status : String): String = status match {
     
     case "1" => "2"
@@ -47,6 +53,9 @@ class CustomerOrderController {
     }
   }
   
+  /**
+   * Gets a single customer order from the database.
+   */
   def getSingleCO(coid: String): ObservableBuffer[customerOrder] = {
     
     val con: SQLConnector = new SQLConnector
@@ -75,6 +84,9 @@ class CustomerOrderController {
     return results
   }
   
+  /**
+   * Gets the status of the customer orders.
+   */
   def getCustomerOrders(status: Int, filter: Boolean): ObservableBuffer[customerOrder] = {
     
     val con: SQLConnector = new SQLConnector
@@ -103,6 +115,9 @@ class CustomerOrderController {
     
   }
   
+  /**
+   * The gateway for deciding which SQL statement to use to request data from the database.
+   */
   def theCustomerOrderGateway(status: Int, filter: Boolean): String = {
     
     if (status != 0) {

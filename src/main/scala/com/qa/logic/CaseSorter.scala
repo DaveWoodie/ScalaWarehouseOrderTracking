@@ -7,6 +7,9 @@ import scalafx.Includes._
 import com.qa.controllers.purchaseOrderController
 import com.qa.graphics.components.SinglePurchaseOrderUpdateStatusButton
 
+/**
+ * Class for the match and case statements to be held in to be used across the table.
+ */
 class CaseSorter {
   
   /**
@@ -51,6 +54,9 @@ class CaseSorter {
     case _ => 0
   }
   
+  /**
+   * Method to return the correct customer colour for the status of the customer order.
+   */
   def getCustomerColour(s: String): Color = s match {
     case "1" => Color.Red
     case "4" => Color.Orange

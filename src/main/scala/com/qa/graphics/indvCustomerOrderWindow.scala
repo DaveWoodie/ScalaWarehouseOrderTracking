@@ -22,7 +22,14 @@ import com.qa.logic.CaseSorter
 import com.qa.controllers.CustomerOrderController
 import com.qa.graphics.components.CustomerOrderLineTable
 
+/**
+ * Class to create and view and individual customer orders, order lines and status.
+ */
 class indvCustomerOrderWindow(customerOrderID: String, statusOfCO: String) extends JFXApp {
+  
+  /**
+   * Method to use to overwrite the currently used stage of the graphics. 
+   */
   def buildIndvCOStage(): PrimaryStage = {
 
     stage = new PrimaryStage {
@@ -126,6 +133,9 @@ class indvCustomerOrderWindow(customerOrderID: String, statusOfCO: String) exten
     return stage
   }
 
+  /**
+   * Method to return to the main window.
+   */
   def backToMain(): Unit = {
     val m: mainWindow = new mainWindow()
     stage = m.buildMainStage()

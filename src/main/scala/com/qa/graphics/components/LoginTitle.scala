@@ -3,7 +3,7 @@ package com.qa.graphics.components
 import scalafx.scene.text.Text
 
 /**
- * Method to build the title of the page,
+ * Class to build the title of the page,
  * sits in the top box of the border layout.
  * Returns nothing but text, custom effects may be added later.
  */

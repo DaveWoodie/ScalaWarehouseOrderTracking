@@ -10,6 +10,9 @@ import com.qa.entities.purchaseOrderLine
 
 class DamagedStockController {
   
+  /**
+   * Method to update the damaged stock based on the input.
+   */
   def updateDamagedStock(t: TableView[purchaseOrderLine], damBox: TextField): Unit = {
 
     t.getSelectionModel.selectedItemProperty.get.quantityDamg.value_=(damBox.text.value)

@@ -11,6 +11,9 @@ import com.qa.entities.purchaseOrder
 
 object POTrialConnection {
   
+  /**
+   * Test method to check the scala could pull something from the database.
+   */
   def main(args: Array[String]): Unit = {
     
     val con: SQLConnector = new SQLConnector

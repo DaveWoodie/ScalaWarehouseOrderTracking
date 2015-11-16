@@ -10,6 +10,10 @@ import scalafx.event.EventHandler
 
 import scalafx.Includes._
 
+/**
+ * Unimplemented class trying to get a way for a button to be given an execution function to run.
+ * In future versions if this could be made to work a lot of lines of code could be saved.
+ */
 class buttonLogic (val function: (String, String) => Unit) {
  
   def assign (b: Button) = { 

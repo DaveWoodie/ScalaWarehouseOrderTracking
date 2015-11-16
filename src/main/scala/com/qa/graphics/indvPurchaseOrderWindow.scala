@@ -27,6 +27,10 @@ import com.qa.graphics.components.PurchaseOrderLineTable
 import com.qa.logic.CaseSorter
 import com.qa.graphics.components.tableScrollPane
 
+/**
+ * Class to view an individual purchase orders order lines and update it's status. 
+ */
+
 class indvPurchaseOrderWindow(purchaseOrderID: String, statusOfPOID: String) extends JFXApp {
 
   /**
@@ -140,6 +144,9 @@ class indvPurchaseOrderWindow(purchaseOrderID: String, statusOfPOID: String) ext
     return stage
   }
 
+  /**
+   * Method to return to the main page
+   */
   def backToMain(): Unit = {
     val m: mainWindow = new mainWindow()
     stage = m.buildMainStage()

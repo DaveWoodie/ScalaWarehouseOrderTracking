@@ -7,6 +7,9 @@ package com.qa.entities
 import scalafx.beans.property.{ObjectProperty, StringProperty, IntegerProperty}
 import scalafx.scene.paint.Color
 
+/**
+ * Entity class for the purchase orders.
+ */
 class purchaseOrder(purchaseID_ : String, dateplaced_ : String, daterecieved_ : String, statusID_ : String, employeeID_ : String, supplierID_ : String)  {
   
   

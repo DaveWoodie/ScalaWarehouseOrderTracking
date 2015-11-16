@@ -7,6 +7,7 @@ import javafx.event.EventHandler
 import javafx.scene.input.MouseEvent
 
 /**
+ * Class for making a scrolling pane with a table in it.
  * Partialy defined for the building of a scroll pane containing any table view.
  */
 class tableScrollPane(t: TableView[_]) extends ScrollPane {

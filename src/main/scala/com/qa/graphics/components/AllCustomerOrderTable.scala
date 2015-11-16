@@ -9,8 +9,14 @@ import scalafx.scene.shape.Circle
 import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color._
 
+/**
+ * Class to make a table containing all the customer orders. 
+ */
 class AllCustomerOrderTable {
   
+  /**
+   * Method to build the customer order table.
+   */
   def buildCOTable(customerOrders: ObservableBuffer[customerOrder]): TableView[customerOrder] = {
 
     new TableView[customerOrder](customerOrders) {
