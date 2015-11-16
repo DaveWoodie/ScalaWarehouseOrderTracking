@@ -66,6 +66,7 @@ class SQLConnector {
   /**
    * Method to insert anything into any table.
    * Unsure of how to actually test this method without also testing a push to the database.
+   * @param s : Takes in the SQL statement.
    */
   def doUpdate(s: String): Unit = {
     println("Pushing changes to the database.")
@@ -85,6 +86,9 @@ class SQLConnector {
 
   /**
    * Method to get a purchase Order
+   * @param s : Takes in the SQL statement.
+   * @param fields : Takes in the fields of data to extract from the database.
+   * @param results: Takes in the ObservableBuffer to return the results of the query in.
    */
   def doPurchaseOrderQuery(s: String, fields: Array[String], results: ObservableBuffer[purchaseOrder]): ObservableBuffer[purchaseOrder] = {
 
@@ -124,6 +128,9 @@ class SQLConnector {
   
   /**
    * Method to query the database for the customer orders.
+   * @param s : Takes in the SQL statement.
+   * @param fields : Takes in the fields of data to extract from the database.
+   * @param results: Takes in the ObservableBuffer to return the results of the query in.
    */
   def doCustomerOrderQuery(s: String, fields: Array[String], results: ObservableBuffer[customerOrder]): ObservableBuffer[customerOrder] = {
 
@@ -167,6 +174,9 @@ class SQLConnector {
   }
   /**
    * Method to return the purchase order lines of a single order.
+   * @param s : Takes in the SQL statement.
+   * @param fields : Takes in the fields of data to extract from the database.
+   * @param results: Takes in the ObservableBuffer to return the results of the query in.
    */
   def doPurchaseOrderLineQuery(s: String, fields: Array[String], results: ObservableBuffer[purchaseOrderLine]): ObservableBuffer[purchaseOrderLine] = {
 
@@ -209,6 +219,9 @@ class SQLConnector {
   
   /**
    * Method to query the database for a set of customer order lines.
+   * @param s : Takes in the SQL statement.
+   * @param fields : Takes in the fields of data to extract from the database.
+   * @param results: Takes in the ObservableBuffer to return the results of the query in.
    */
   def doCustomerOrderLineQuery(s: String, fields: Array[String], results: ObservableBuffer[customerOrderLine]): ObservableBuffer[customerOrderLine] = {
 

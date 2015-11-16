@@ -13,6 +13,8 @@ class purchaseOrderLineController {
   
   /**
    * Method to add a new purchase order line.
+   * @param data : Takes in a purchase order line to add to the database.
+   * @param supplierID : Takes in a String of the supplied ID to refer to in the database.
    */
   def addNewLine(data: purchaseOrderLine, supplierID: String): Unit = {
     val con: SQLConnector = new SQLConnector
@@ -31,7 +33,8 @@ class purchaseOrderLineController {
   }
   
   /**
-   * Method to get the pruchase order Lines of an order with product order ID, ID.
+   * Method to get the purchase order Lines of an order with product order ID, ID.
+   * @param ID : Takes in a String parameter of the purchase order Id number to determine which purchase order lines to return.
    */
   def getPurchaseOrderLines(ID : String): ObservableBuffer[purchaseOrderLine] = {
     
@@ -62,6 +65,9 @@ class purchaseOrderLineController {
   
   /**
    * Method to update the levels of damaged stock in an order
+   * @param orderID : Takes the purchase order ID number of the purchase order to update.
+   * @param itemID : Takes the Item ID number of the items to update.
+   * @param quantity : Takes the quantity damaged of the above variables.
    */
   def updateDamagedStock(orderID: String, itemID : String, quantity : String): Unit = {
     val con: SQLConnector = new SQLConnector

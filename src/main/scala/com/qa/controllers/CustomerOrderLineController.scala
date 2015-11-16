@@ -12,6 +12,7 @@ class CustomerOrderLineController {
   
   /**
    * Gets the customer order lines from the database.
+   * @param ID : Takes the  Sting value of the customer order to retrieve it's relevant order lines.
    */
   def getCustomerOrderLines(ID : String): ObservableBuffer[customerOrderLine] = {
     

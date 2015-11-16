@@ -14,8 +14,11 @@ class CustomerOrderController {
   
   /**
    * SQL to update the status.
+   * NOT IMPLEMENTED YET.
+   * @param currentStatus : Takes the current status of the Customer Order.
+   * @param coid : Takes in a String of the customer order identification number
    */
-  def updatePOStatus(currentStatus : String, coid : String): Unit = {
+  def updateCOStatus(currentStatus : String, coid : String): Unit = {
     
     val con: SQLConnector = new SQLConnector
     val statusToUpdateTo: String = updatedStatus(currentStatus)
@@ -39,6 +42,7 @@ class CustomerOrderController {
   /**
    * Little case statement for the progression of the status' of the customer orders.
    * NOT IMPLEMENTED YET, it would also exist within the CaseSorter class.
+   * @param status : Takes the current status of the Customer Order.
    */
   def updatedStatus(status : String): String = status match {
     
@@ -55,6 +59,7 @@ class CustomerOrderController {
   
   /**
    * Gets a single customer order from the database.
+   * @param coid : Takes in a String of the customer order identification number
    */
   def getSingleCO(coid: String): ObservableBuffer[customerOrder] = {
     
@@ -86,6 +91,8 @@ class CustomerOrderController {
   
   /**
    * Gets the status of the customer orders.
+   * @param status : Takes in an Int of the status.
+   * @param filter : Takes in a boolean to determine wether in include or exclude a status.
    */
   def getCustomerOrders(status: Int, filter: Boolean): ObservableBuffer[customerOrder] = {
     
@@ -117,6 +124,8 @@ class CustomerOrderController {
   
   /**
    * The gateway for deciding which SQL statement to use to request data from the database.
+   * @param status : Takes in an Int of the status.
+   * @param filter : Takes in a boolean to determine wether in include or exclude a status.
    */
   def theCustomerOrderGateway(status: Int, filter: Boolean): String = {
     

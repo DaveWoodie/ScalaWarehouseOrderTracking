@@ -13,6 +13,8 @@ class LoginController {
   
     /**
    * Applies the logic of the login button
+   * @param usr : String of the username.
+   * @param pss : String of the password.
    */
   def loginButton(usr: String, pss: String): PrimaryStage = {
 

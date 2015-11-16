@@ -12,6 +12,8 @@ class DamagedStockController {
   
   /**
    * Method to update the damaged stock based on the input.
+   * @param t : Takes the TableView of purchase order lines.
+   * @param damBox : Takes the text box that holds the values of the damaged stocks.
    */
   def updateDamagedStock(t: TableView[purchaseOrderLine], damBox: TextField): Unit = {
 
