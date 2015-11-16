@@ -38,6 +38,7 @@ class SQLConnector {
   var connection: Connection = null
   /**
    * Method to do the Login Query
+   * @param s : Takes in the SQL statement.
    */
   def doLoginQuery(s: String): Array[String] = {
 
