@@ -1,7 +1,8 @@
 package logic
 
 import org.scalatest._
-import logic.loginLogic
+
+import com.qa.logic.loginLogic;
 
 class ScalaTestLL extends FlatSpec with Matchers {
 

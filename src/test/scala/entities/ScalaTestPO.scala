@@ -1,6 +1,8 @@
 package entities
 
 import org.scalatest._
+
+import com.qa.entities.purchaseOrder;
   
 class ScalaTestPO extends FlatSpec with Matchers {
   

@@ -2,6 +2,8 @@ package connectors
 
 import org.scalatest._
 
+import com.qa.connectors.MongoConnector;
+
 class ScalaTestMC extends FlatSpec with Matchers {
   
   "The connector" should "throw a com.mongodb.MongoTimeoutException if the database if offline" in {

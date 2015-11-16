@@ -2,6 +2,8 @@ package connectors
 
 import org.scalatest._
 
+import com.qa.connectors.SQLConnector;
+
 class ScalaTestSQL extends FlatSpec with Matchers {
   
   /**
