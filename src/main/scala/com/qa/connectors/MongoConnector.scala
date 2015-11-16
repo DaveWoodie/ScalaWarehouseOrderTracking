@@ -7,7 +7,9 @@ package com.qa.connectors
 import com.mongodb.casbah.MongoCollection
 import com.mongodb.casbah.Imports._
 
-//.results() for no a-syncronous
+/**
+ * Class to do mongo connections.  At the moment this is nothing more than a proof of concept that a conneciton can be done.
+ */
 
 class MongoConnector {
     

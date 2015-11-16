@@ -16,13 +16,12 @@ import com.qa.entities.{purchaseOrder, purchaseOrderLine, customerOrder, custome
  */
 
 /**
- * NOTE: METHOD MERGED
+ * NOTE: METHODS MERGED
  * 
  * doInsert
  * doPurchaseOrderLineUpdate
  * doPurchaseOrderStatusUpdate
  * Are IDENTICAL methods.  They are different as this is a merge of three individual connection classes.
- * I will try and remove them.
  */
 
 class SQLConnector {
@@ -122,6 +121,9 @@ class SQLConnector {
     results
   }
   
+  /**
+   * Method to query the database for the customer orders.
+   */
   def doCustomerOrderQuery(s: String, fields: Array[String], results: ObservableBuffer[customerOrder]): ObservableBuffer[customerOrder] = {
 
     try {
@@ -163,7 +165,7 @@ class SQLConnector {
     results
   }
   /**
-   * Method to return the pruchase order lines
+   * Method to return the purchase order lines of a single order.
    */
   def doPurchaseOrderLineQuery(s: String, fields: Array[String], results: ObservableBuffer[purchaseOrderLine]): ObservableBuffer[purchaseOrderLine] = {
 
@@ -204,6 +206,9 @@ class SQLConnector {
     results
   }
   
+  /**
+   * Method to query the database for a set of customer order lines.
+   */
   def doCustomerOrderLineQuery(s: String, fields: Array[String], results: ObservableBuffer[customerOrderLine]): ObservableBuffer[customerOrderLine] = {
 
     try {
